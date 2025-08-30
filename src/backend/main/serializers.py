@@ -112,22 +112,59 @@ class GramaNiladhariDivisionSerializer(serializers.ModelSerializer):
 
 
 class IssueAttachmentSerializer(serializers.ModelSerializer):
+    file_url = serializers.SerializerMethodField()
+    file_size = serializers.SerializerMethodField()
+
     class Meta:
         model = IssueAttachment
-        fields = ['id', 'file', 'attachment_type', 'description', 'uploaded_at']
+        fields = ['id', 'file', 'file_url', 'file_size', 'attachment_type', 'description', 'uploaded_at']
+
+    def get_file_url(self, obj):
+        request = self.context.get('request')
+        if request and obj.file:
+            return request.build_absolute_uri(obj.file.url)
+        return obj.file.url if obj.file else None
+
+    def get_file_size(self, obj):
+        if obj.file:
+            return obj.file.size
+        return None
 
 
 class ResponseAttachmentSerializer(serializers.ModelSerializer):
+    file_url = serializers.SerializerMethodField()
+    file_size = serializers.SerializerMethodField()
+    attachment_type = serializers.SerializerMethodField()
+
     class Meta:
         model = ResponseAttachment
-        fields = ['id', 'file', 'description', 'uploaded_at']
+        fields = ['id', 'file', 'file_url', 'file_size', 'attachment_type', 'description', 'uploaded_at']
+
+    def get_file_url(self, obj):
+        request = self.context.get('request')
+        if request and obj.file:
+            return request.build_absolute_uri(obj.file.url)
+        return obj.file.url if obj.file else None
+
+    def get_file_size(self, obj):
+        if obj.file:
+            return obj.file.size
+        return None
+
+    def get_attachment_type(self, obj):
+        if obj.file:
+            if obj.file.name.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp')):
+                return 'image'
+            elif obj.file.name.lower().endswith(('.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm')):
+                return 'video'
+        return 'document'
 
 
 class IssueResponseSerializer(serializers.ModelSerializer):
     responder_name = serializers.CharField(source='responder.get_full_name', read_only=True)
     responder_role = serializers.CharField(source='responder.user_type', read_only=True)
     status_change = serializers.CharField(source='response_type', read_only=True)
-    attachments = ResponseAttachmentSerializer(many=True, read_only=True)
+    attachments = serializers.SerializerMethodField()
 
     class Meta:
         model = IssueResponse
@@ -135,6 +172,10 @@ class IssueResponseSerializer(serializers.ModelSerializer):
             'id', 'response_type', 'message', 'language', 'additional_days',
             'responder_name', 'responder_role', 'status_change', 'attachments', 'created_at'
         ]
+
+    def get_attachments(self, obj):
+        attachments = obj.attachments.all()
+        return ResponseAttachmentSerializer(attachments, many=True, context=self.context).data
 
 
 class IssueEscalationSerializer(serializers.ModelSerializer):
@@ -169,6 +210,7 @@ class IssueListSerializer(serializers.ModelSerializer):
     gn_division_name = serializers.CharField(source='grama_niladhari_division.name_en', read_only=True)
     current_handler_name = serializers.CharField(source='current_handler.get_full_name', read_only=True)
     response_count = serializers.SerializerMethodField()
+    attachments = serializers.SerializerMethodField()
 
     class Meta:
         model = Issue
@@ -177,11 +219,38 @@ class IssueListSerializer(serializers.ModelSerializer):
             'priority', 'reporter_name', 'is_anonymous', 'province_name',
             'district_name', 'ds_division_name', 'gn_division_name',
             'current_handler_name', 'current_level', 'escalation_count',
-            'response_count', 'created_at', 'updated_at'
+            'response_count', 'attachments', 'created_at', 'updated_at'
         ]
 
     def get_response_count(self, obj):
         return obj.responses.count()
+
+    def get_attachments(self, obj):
+        attachments = obj.attachments.all()
+        attachment_data = []
+        for attachment in attachments:
+            file_type = 'image'
+            if attachment.file and attachment.file.name:
+                if attachment.file.name.lower().endswith(('.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm')):
+                    file_type = 'video'
+                elif not attachment.file.name.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp')):
+                    file_type = 'document'
+            
+            request = self.context.get('request')
+            file_url = None
+            if request and attachment.file:
+                file_url = request.build_absolute_uri(attachment.file.url)
+            elif attachment.file:
+                file_url = attachment.file.url
+            
+            attachment_data.append({
+                'id': attachment.id,
+                'file_url': file_url,
+                'file_type': file_type,
+                'description': attachment.description or '',
+                'uploaded_at': attachment.uploaded_at
+            })
+        return attachment_data
 
 
 class EscalatedIssueSerializer(serializers.ModelSerializer):
@@ -240,7 +309,7 @@ class IssueDetailSerializer(serializers.ModelSerializer):
     ds_division_name = serializers.CharField(source='ds_division.name_en', read_only=True)
     gn_division_name = serializers.CharField(source='grama_niladhari_division.name_en', read_only=True)
     current_handler_name = serializers.CharField(source='current_handler.get_full_name', read_only=True)
-    attachments = IssueAttachmentSerializer(many=True, read_only=True)
+    attachments = serializers.SerializerMethodField()
     responses = IssueResponseSerializer(many=True, read_only=True)
     escalations = IssueEscalationSerializer(many=True, read_only=True)
     public_comments = PublicCommentSerializer(many=True, read_only=True)
@@ -256,6 +325,10 @@ class IssueDetailSerializer(serializers.ModelSerializer):
             'attachments', 'responses', 'escalations', 'public_comments',
             'created_at', 'updated_at', 'resolved_at'
         ]
+
+    def get_attachments(self, obj):
+        attachments = obj.attachments.all()
+        return IssueAttachmentSerializer(attachments, many=True, context=self.context).data
 
 
 class IssueCreateSerializer(serializers.ModelSerializer):

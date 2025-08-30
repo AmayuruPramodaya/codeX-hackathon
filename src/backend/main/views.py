@@ -218,7 +218,27 @@ class IssueCreateView(generics.CreateAPIView):
             print("Serializer errors:", serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
-        self.perform_create(serializer)
+        # Create the issue first
+        issue = serializer.save()
+        
+        # Handle file attachments if any
+        attachments = request.FILES.getlist('attachments')
+        for attachment_file in attachments:
+            # Determine file type
+            if attachment_file.content_type.startswith('image/'):
+                attachment_type = 'image'
+            elif attachment_file.content_type.startswith('video/'):
+                attachment_type = 'video'
+            else:
+                attachment_type = 'document'
+            
+            IssueAttachment.objects.create(
+                issue=issue,
+                file=attachment_file,
+                attachment_type=attachment_type,
+                description=f"{attachment_type.title()} attachment"
+            )
+        
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 

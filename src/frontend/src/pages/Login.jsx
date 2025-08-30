@@ -79,15 +79,6 @@ const Login = () => {
     }
   };
 
-  const demoAccounts = [
-    { type: 'Citizen', username: 'citizen', password: 'demo123' },
-    { type: 'Grama Niladhari', username: 'gn_user', password: 'demo123' },
-    { type: 'Admin', username: 'admin', password: 'demo123' }
-  ];
-
-  const fillDemoAccount = (username, password) => {
-    setFormData({ username, password });
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -105,23 +96,7 @@ const Login = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow-xl rounded-lg sm:px-10 border border-gray-200">
-          {/* Demo Accounts Section */}
-          <div className="mb-6">
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Demo Accounts:</h3>
-            <div className="grid gap-2">
-              {demoAccounts.map((account, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => fillDemoAccount(account.username, account.password)}
-                  className="text-left p-2 text-xs bg-gray-50 hover:bg-gray-100 rounded border transition-colors"
-                >
-                  <div className="font-medium text-gray-700">{account.type}</div>
-                  <div className="text-gray-500">{account.username}</div>
-                </button>
-              ))}
-            </div>
-          </div>
+          
 
           <div className="border-t border-gray-200 pt-6">
             <form className="space-y-6" onSubmit={handleSubmit}>

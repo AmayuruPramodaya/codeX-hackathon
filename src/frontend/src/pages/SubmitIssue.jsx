@@ -303,19 +303,19 @@ const SubmitIssue = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Submit New Issue</h1>
-            <p className="mt-1 text-sm text-gray-600">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 glass-effect fade-in-up">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold gradient-text-primary">Submit New Issue</h1>
+            <p className="mt-3 text-lg text-slate-600">
               Report issues to the relevant government authorities. Your submission will be tracked through the resolution process.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-8">
             {/* Anonymous Submission Toggle */}
-            <div className="bg-blue-50 p-4 rounded-lg">
+            <div className="bg-gradient-to-r from-slate-50 to-blue-50 p-6 rounded-xl border border-slate-200">
               <div className="flex items-center">
                 <input
                   id="is_anonymous"
@@ -323,9 +323,9 @@ const SubmitIssue = () => {
                   type="checkbox"
                   checked={formData.is_anonymous}
                   onChange={handleInputChange}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-5 w-5 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                 />
-                <label htmlFor="is_anonymous" className="ml-2 block text-sm text-gray-900">
+                <label htmlFor="is_anonymous" className="ml-3 block text-sm font-medium text-slate-900">
                   Submit anonymously (provide your details below for tracking)
                 </label>
               </div>
@@ -335,7 +335,7 @@ const SubmitIssue = () => {
             {formData.is_anonymous && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
                     Full Name *
                   </label>
                   <input
@@ -343,8 +343,8 @@ const SubmitIssue = () => {
                     name="anonymous_name"
                     value={formData.anonymous_name}
                     onChange={handleInputChange}
-                    className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                      errors.anonymous_name ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                    className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300 ${
+                      errors.anonymous_name ? 'border-red-300 bg-red-50' : 'border-slate-300'
                     }`}
                     placeholder="Enter your full name"
                   />
@@ -354,7 +354,7 @@ const SubmitIssue = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
                     ID Number *
                   </label>
                   <input
@@ -362,8 +362,8 @@ const SubmitIssue = () => {
                     name="anonymous_id"
                     value={formData.anonymous_id}
                     onChange={handleInputChange}
-                    className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                      errors.anonymous_id ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                    className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300 ${
+                      errors.anonymous_id ? 'border-red-300 bg-red-50' : 'border-slate-300'
                     }`}
                     placeholder="Enter your ID number"
                   />
@@ -373,7 +373,7 @@ const SubmitIssue = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
                     Phone Number *
                   </label>
                   <input
@@ -381,8 +381,8 @@ const SubmitIssue = () => {
                     name="anonymous_phone"
                     value={formData.anonymous_phone}
                     onChange={handleInputChange}
-                    className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                      errors.anonymous_phone ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                    className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300 ${
+                      errors.anonymous_phone ? 'border-red-300 bg-red-50' : 'border-slate-300'
                     }`}
                     placeholder="Enter your phone number"
                   />
@@ -392,7 +392,7 @@ const SubmitIssue = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
                     Address
                   </label>
                   <input
@@ -400,7 +400,7 @@ const SubmitIssue = () => {
                     name="anonymous_address"
                     value={formData.anonymous_address}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300"
                     placeholder="Enter your address"
                   />
                 </div>
@@ -410,7 +410,7 @@ const SubmitIssue = () => {
             {/* Issue Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Issue Title *
                 </label>
                 <input
@@ -418,8 +418,8 @@ const SubmitIssue = () => {
                   name="title"
                   value={formData.title}
                   onChange={handleInputChange}
-                  className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.title ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                  className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300 ${
+                    errors.title ? 'border-red-300 bg-red-50' : 'border-slate-300'
                   }`}
                   placeholder="Brief description of the issue"
                 />
@@ -429,15 +429,15 @@ const SubmitIssue = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Category *
                 </label>
                 <select
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
-                  className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.category ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                  className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300 ${
+                    errors.category ? 'border-red-300 bg-red-50' : 'border-slate-300'
                   }`}
                 >
                   <option value="">Select category</option>
@@ -456,14 +456,14 @@ const SubmitIssue = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Priority
                 </label>
                 <select
                   name="priority"
                   value={formData.priority}
                   onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -473,14 +473,14 @@ const SubmitIssue = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Language
                 </label>
                 <select
                   name="language"
                   value={formData.language}
                   onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300"
                 >
                   <option value="en">English</option>
                   <option value="si">සිංහල</option>
@@ -491,16 +491,16 @@ const SubmitIssue = () => {
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Description *
               </label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                rows={4}
-                className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.description ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                rows={5}
+                className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300 ${
+                  errors.description ? 'border-red-300 bg-red-50' : 'border-slate-300'
                 }`}
                 placeholder="Provide detailed information about the issue"
               />
@@ -511,22 +511,22 @@ const SubmitIssue = () => {
 
             {/* Location */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                <MapPinIcon className="h-5 w-5 mr-2" />
+              <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center">
+                <MapPinIcon className="h-6 w-6 mr-3 text-slate-600" />
                 Location Information
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
                     Province *
                   </label>
                   <select
                     name="province"
                     value={formData.province}
                     onChange={handleInputChange}
-                    className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                      errors.province ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                    className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300 ${
+                      errors.province ? 'border-red-300 bg-red-50' : 'border-slate-300'
                     }`}
                   >
                     <option value="">Select Province</option>
@@ -542,7 +542,7 @@ const SubmitIssue = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
                     District *
                   </label>
                   <select
@@ -550,8 +550,8 @@ const SubmitIssue = () => {
                     value={formData.district}
                     onChange={handleInputChange}
                     disabled={!formData.province}
-                    className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 ${
-                      errors.district ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                    className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 disabled:bg-slate-100 transition-all duration-300 ${
+                      errors.district ? 'border-red-300 bg-red-50' : 'border-slate-300'
                     }`}
                   >
                     <option value="">Select District</option>
@@ -567,7 +567,7 @@ const SubmitIssue = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
                     DS Division *
                   </label>
                   <select
@@ -575,8 +575,8 @@ const SubmitIssue = () => {
                     value={formData.ds_division}
                     onChange={handleInputChange}
                     disabled={!formData.district}
-                    className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 ${
-                      errors.ds_division ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                    className={`w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 disabled:bg-slate-100 transition-all duration-300 ${
+                      errors.ds_division ? 'border-red-300 bg-red-50' : 'border-slate-300'
                     }`}
                   >
                     <option value="">Select DS Division</option>
@@ -592,7 +592,7 @@ const SubmitIssue = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
                     GN Division
                   </label>
                   <select
@@ -600,7 +600,7 @@ const SubmitIssue = () => {
                     value={formData.gn_division}
                     onChange={handleInputChange}
                     disabled={!formData.ds_division}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 disabled:bg-slate-100 transition-all duration-300"
                   >
                     <option value="">Select GN Division</option>
                     {Array.isArray(divisions.gnDivisions) && divisions.gnDivisions.map(division => (
@@ -612,7 +612,7 @@ const SubmitIssue = () => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
                     Specific Address
                   </label>
                   <input
@@ -620,7 +620,7 @@ const SubmitIssue = () => {
                     name="address"
                     value={formData.address}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300"
                     placeholder="Street address, landmarks, etc."
                   />
                 </div>
@@ -629,10 +629,10 @@ const SubmitIssue = () => {
 
             {/* Attachments */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-700 mb-4">
                 Attachments
               </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+              <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:border-slate-400 transition-colors duration-300">
                 <input
                   type="file"
                   multiple
@@ -642,29 +642,32 @@ const SubmitIssue = () => {
                   id="file-upload"
                 />
                 <label htmlFor="file-upload" className="cursor-pointer">
-                  <PaperClipIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">
-                    Click to upload images or videos (max 10MB each)
+                  <PaperClipIcon className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                  <p className="text-lg text-slate-600 font-medium">
+                    Click to upload images or videos
+                  </p>
+                  <p className="text-sm text-slate-500 mt-1">
+                    Maximum 10MB per file
                   </p>
                 </label>
               </div>
 
               {attachments.length > 0 && (
-                <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
                   {attachments.map((file, index) => (
                     <div key={index} className="relative">
-                      <div className="bg-gray-100 rounded-lg p-3 text-center">
+                      <div className="bg-slate-100 rounded-xl p-4 text-center border border-slate-200 hover:shadow-md transition-shadow duration-300">
                         {file.type.startsWith('image/') ? (
-                          <PhotoIcon className="h-8 w-8 text-gray-400 mx-auto mb-1" />
+                          <PhotoIcon className="h-10 w-10 text-slate-500 mx-auto mb-2" />
                         ) : (
-                          <VideoCameraIcon className="h-8 w-8 text-gray-400 mx-auto mb-1" />
+                          <VideoCameraIcon className="h-10 w-10 text-slate-500 mx-auto mb-2" />
                         )}
-                        <p className="text-xs text-gray-600 truncate">{file.name}</p>
+                        <p className="text-xs text-slate-700 truncate font-medium">{file.name}</p>
                       </div>
                       <button
                         type="button"
                         onClick={() => removeAttachment(index)}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                        className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transition-colors duration-200"
                       >
                         <XMarkIcon className="h-4 w-4" />
                       </button>
@@ -675,20 +678,27 @@ const SubmitIssue = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="flex justify-end pt-6 border-t border-gray-200">
+            <div className="flex justify-end pt-8 border-t border-slate-200">
               <button
                 type="button"
                 onClick={() => navigate(-1)}
-                className="mr-3 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                className="mr-4 px-6 py-3 border border-slate-300 rounded-xl text-slate-700 hover:bg-slate-50 font-semibold transition-all duration-300"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-8 py-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-slate-800 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                {loading ? 'Submitting...' : 'Submit Issue'}
+                {loading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    Submitting...
+                  </div>
+                ) : (
+                  'Submit Issue'
+                )}
               </button>
             </div>
           </form>
