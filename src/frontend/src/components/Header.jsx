@@ -53,29 +53,32 @@ const Header = () => {
   ] : [];
 
   return (
-    <header className="bg-white shadow-lg border-b border-slate-200 backdrop-blur-sm z-999">
+    <header className="bg-white shadow-lg border-b border-gray-200 backdrop-blur-sm z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-18">
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center group">
-              <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-3 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-3 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
                 <span className="text-white font-bold text-xl">GS</span>
               </div>
               <div className="ml-4">
-                <h1 className="text-2xl font-bold gradient-text-primary">GovSol</h1>
-                <p className="text-sm text-slate-500 font-medium">Government Solutions</p>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  <span className="text-blue-900">Gov</span>
+                  <span className="text-yellow-500">Sol</span>
+                </h1>
+                <p className="text-sm text-gray-500 font-medium">Government Solutions</p>
               </div>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-2">
+          <nav className="hidden md:flex space-x-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className="text-slate-700 hover:text-slate-900 px-4 py-2 text-sm font-semibold rounded-xl hover:bg-slate-50 transition-all duration-300"
+                className="text-gray-700 hover:text-blue-900 px-4 py-2 text-sm font-semibold rounded-lg hover:bg-gray-50 transition-all duration-300"
               >
                 {item.name}
               </Link>
@@ -88,16 +91,16 @@ const Header = () => {
             <div className="relative">
               <button
                 onClick={() => setLanguageMenuOpen(!languageMenuOpen)}
-                className="flex items-center space-x-2 text-sm text-slate-700 hover:text-slate-900 px-4 py-2 rounded-xl hover:bg-slate-50 transition-all duration-300 border border-slate-200"
+                className="flex items-center space-x-2 text-sm text-gray-700 hover:text-blue-900 px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300 border border-gray-200"
               >
-                <GlobeAltIcon className="h-4 w-4" />
+                <GlobeAltIcon className="h-4 w-4 text-blue-600" />
                 <span>{languages.find(lang => lang.code === currentLanguage)?.flag}</span>
                 <span className="hidden sm:block font-medium">{languages.find(lang => lang.code === currentLanguage)?.name}</span>
                 <ChevronDownIcon className="h-3 w-3" />
               </button>
 
               {languageMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50">
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
                   {languages.map((language) => (
                     <button
                       key={language.code}
@@ -105,14 +108,14 @@ const Header = () => {
                         changeLanguage(language.code);
                         setLanguageMenuOpen(false);
                       }}
-                      className={`flex items-center w-full px-4 py-3 text-sm hover:bg-slate-50 transition-colors duration-200 ${
-                        currentLanguage === language.code ? 'bg-slate-50 text-slate-900 font-semibold' : 'text-slate-700'
+                      className={`flex items-center w-full px-4 py-3 text-sm hover:bg-gray-50 transition-colors duration-200 ${
+                        currentLanguage === language.code ? 'bg-blue-50 text-blue-900 font-semibold' : 'text-gray-700'
                       }`}
                     >
                       <span className="mr-3">{language.flag}</span>
                       <span>{language.name}</span>
                       {currentLanguage === language.code && (
-                        <span className="ml-auto text-slate-600">✓</span>
+                        <span className="ml-auto text-blue-600">✓</span>
                       )}
                     </button>
                   ))}
@@ -122,32 +125,26 @@ const Header = () => {
 
             {user ? (
               <>
-                {/* Notifications */}
-                {/* <button className="relative p-3 text-slate-500 hover:text-slate-700 rounded-xl hover:bg-slate-50 transition-all duration-300 border border-slate-200">
-                  <BellIcon className="h-5 w-5" />
-                  <span className="absolute top-1 right-1 h-3 w-3 bg-red-500 rounded-full border-2 border-white"></span>
-                </button> */}
-
                 {/* User Dropdown */}
                 <div className="relative">
                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center space-x-3 text-sm text-slate-700 hover:text-slate-900 px-3 py-2 rounded-xl hover:bg-slate-50 transition-all duration-300"
+                    className="flex items-center space-x-3 text-sm text-gray-700 hover:text-blue-900 px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300"
                   >
-                    <div className="w-9 h-9 bg-gradient-to-r from-slate-100 to-slate-200 rounded-full flex items-center justify-center border border-slate-300">
-                      <UserCircleIcon className="w-5 h-5 text-slate-600" />
+                    <div className="w-9 h-9 bg-gradient-to-r from-blue-100 to-blue-200 rounded-full flex items-center justify-center border border-blue-300">
+                      <UserCircleIcon className="w-5 h-5 text-blue-600" />
                     </div>
                     <span className="font-semibold">{user.first_name || user.username}</span>
                     <ChevronDownIcon className="h-3 w-3" />
                   </button>
 
                   {userMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50">
-                      <div className="px-4 py-3 border-b border-slate-200">
-                        <p className="text-sm font-semibold text-slate-900">
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
+                      <div className="px-4 py-3 border-b border-gray-200">
+                        <p className="text-sm font-semibold text-gray-900">
                           {user.first_name} {user.last_name}
                         </p>
-                        <p className="text-xs text-slate-500 font-medium">
+                        <p className="text-xs text-blue-600 font-medium">
                           {user.user_type?.replace('_', ' ').toUpperCase()}
                         </p>
                       </div>
@@ -157,7 +154,7 @@ const Header = () => {
                           key={item.name}
                           to={item.href}
                           onClick={() => setUserMenuOpen(false)}
-                          className="block px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 font-medium transition-colors duration-200"
+                          className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900 font-medium transition-colors duration-200"
                         >
                           {item.name}
                         </Link>
@@ -166,17 +163,17 @@ const Header = () => {
                       <Link
                         to="/settings"
                         onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 font-medium transition-colors duration-200"
+                        className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900 font-medium transition-colors duration-200"
                       >
-                        <Cog6ToothIcon className="h-4 w-4 mr-3" />
+                        <Cog6ToothIcon className="h-4 w-4 mr-3 text-blue-600" />
                         {t('settings')}
                       </Link>
 
                       <button
                         onClick={handleLogout}
-                        className="flex items-center w-full px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 font-medium transition-colors duration-200"
+                        className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 font-medium transition-colors duration-200"
                       >
-                        <ArrowRightOnRectangleIcon className="h-4 w-4 mr-3" />
+                        <ArrowRightOnRectangleIcon className="h-4 w-4 mr-3 text-red-500" />
                         {t('signOut')}
                       </button>
                     </div>
@@ -187,13 +184,13 @@ const Header = () => {
               <div className="flex items-center space-x-3">
                 <Link
                   to="/login"
-                  className="text-slate-700 hover:text-slate-900 px-4 py-2 text-sm font-semibold rounded-xl hover:bg-slate-50 transition-all duration-300"
+                  className="text-gray-700 hover:text-blue-900 px-4 py-2 text-sm font-semibold rounded-lg hover:bg-gray-50 transition-all duration-300"
                 >
                   {t('signIn')}
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-slate-800 text-white px-5 py-2 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 px-5 py-2 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
                   {t('register')}
                 </Link>
@@ -205,7 +202,7 @@ const Header = () => {
           <div className="md:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-slate-700 hover:text-slate-900 p-2 rounded-xl hover:bg-slate-50 transition-all duration-300"
+              className="text-gray-700 hover:text-blue-900 p-2 rounded-lg hover:bg-gray-50 transition-all duration-300"
             >
               {mobileMenuOpen ? (
                 <XMarkIcon className="h-6 w-6" />
@@ -218,11 +215,11 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-200 py-6 bg-slate-50/50 backdrop-blur-sm">
+          <div className="md:hidden border-t border-gray-200 py-6 bg-gray-50/50 backdrop-blur-sm">
             <div className="space-y-2">
               {/* Language Switcher Mobile */}
               <div className="px-4 py-3">
-                <p className="text-sm font-semibold text-slate-700 mb-3">{t('language')}</p>
+                <p className="text-sm font-semibold text-gray-700 mb-3">{t('language')}</p>
                 <div className="grid grid-cols-3 gap-2">
                   {languages.map((language) => (
                     <button
@@ -231,10 +228,10 @@ const Header = () => {
                         changeLanguage(language.code);
                         setMobileMenuOpen(false);
                       }}
-                      className={`flex items-center justify-center px-3 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+                      className={`flex items-center justify-center px-3 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
                         currentLanguage === language.code 
-                          ? 'bg-slate-800 text-white shadow-lg' 
-                          : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                          ? 'bg-blue-600 text-white shadow-lg' 
+                          : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
                       }`}
                     >
                       <span className="mr-1">{language.flag}</span>
@@ -249,7 +246,7 @@ const Header = () => {
                   key={item.name}
                   to={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-3 text-base font-semibold text-slate-700 hover:text-slate-900 hover:bg-white rounded-xl mx-2 transition-all duration-300"
+                  className="block px-4 py-3 text-base font-semibold text-gray-700 hover:text-blue-900 hover:bg-white rounded-lg mx-2 transition-all duration-300"
                 >
                   {item.name}
                 </Link>
@@ -257,12 +254,12 @@ const Header = () => {
 
               {user ? (
                 <>
-                  <div className="border-t border-slate-200 pt-6 mt-6">
-                    <div className="px-4 py-3 bg-white rounded-xl mx-2 mb-3">
-                      <p className="text-base font-bold text-slate-900">
+                  <div className="border-t border-gray-200 pt-6 mt-6">
+                    <div className="px-4 py-3 bg-white rounded-lg mx-2 mb-3 border border-gray-200">
+                      <p className="text-base font-bold text-gray-900">
                         {user.first_name} {user.last_name}
                       </p>
-                      <p className="text-sm text-slate-500 font-medium">
+                      <p className="text-sm text-blue-600 font-medium">
                         {user.user_type?.replace('_', ' ').toUpperCase()}
                       </p>
                     </div>
@@ -272,7 +269,7 @@ const Header = () => {
                         key={item.name}
                         to={item.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className="block px-4 py-3 text-base font-semibold text-slate-700 hover:text-slate-900 hover:bg-white rounded-xl mx-2 transition-all duration-300"
+                        className="block px-4 py-3 text-base font-semibold text-gray-700 hover:text-blue-900 hover:bg-white rounded-lg mx-2 transition-all duration-300"
                       >
                         {item.name}
                       </Link>
@@ -281,32 +278,32 @@ const Header = () => {
                     <Link
                       to="/settings"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-4 py-3 text-base font-semibold text-slate-700 hover:text-slate-900 hover:bg-white rounded-xl mx-2 transition-all duration-300"
+                      className="block px-4 py-3 text-base font-semibold text-gray-700 hover:text-blue-900 hover:bg-white rounded-lg mx-2 transition-all duration-300"
                     >
                       {t('settings')}
                     </Link>
 
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-3 text-base font-semibold text-slate-700 hover:text-slate-900 hover:bg-white rounded-xl mx-2 transition-all duration-300"
+                      className="block w-full text-left px-4 py-3 text-base font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg mx-2 transition-all duration-300"
                     >
                       {t('signOut')}
                     </button>
                   </div>
                 </>
               ) : (
-                <div className="border-t border-slate-200 pt-6 mt-6 space-y-2">
+                <div className="border-t border-gray-200 pt-6 mt-6 space-y-2">
                   <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-base font-semibold text-slate-700 hover:text-slate-900 hover:bg-white rounded-xl mx-2 transition-all duration-300"
+                    className="block px-4 py-3 text-base font-semibold text-gray-700 hover:text-blue-900 hover:bg-white rounded-lg mx-2 transition-all duration-300"
                   >
                     {t('signIn')}
                   </Link>
                   <Link
                     to="/register"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-base font-semibold bg-gradient-to-r from-slate-800 to-slate-900 text-white rounded-xl mx-2 shadow-lg"
+                    className="block px-4 py-3 text-base font-semibold bg-yellow-400 hover:bg-yellow-300 text-blue-900 rounded-lg mx-2 shadow-lg transition-all duration-300"
                   >
                     {t('register')}
                   </Link>

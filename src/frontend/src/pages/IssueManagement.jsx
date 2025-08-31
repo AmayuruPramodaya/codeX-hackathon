@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { issuesAPI } from '../services/api';
+import StatusManager from '../components/StatusManager';
 import {
   ClockIcon,
   MapPinIcon,
@@ -258,7 +259,21 @@ const IssueManagement = () => {
                       </div>
                     </div>
 
-                    <div className="ml-6">
+                    <div className="ml-6 space-y-3">
+                      {/* Status Manager */}
+                      <StatusManager 
+                        issue={issue} 
+                        compact={true} 
+                        onStatusUpdate={(newStatus) => {
+                          // Update the local issue state
+                          setIssues(prevIssues => 
+                            prevIssues.map(i => 
+                              i.id === issue.id ? { ...i, status: newStatus } : i
+                            )
+                          );
+                        }}
+                      />
+                      
                       <Link
                         to={`/issue/${issue.id}`}
                         className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"

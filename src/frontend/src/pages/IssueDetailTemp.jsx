@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useToast } from '../contexts/ToastContext';
 import { api } from '../services/api';
 import ImageVideoViewer from '../components/ImageVideoViewer';
@@ -11,12 +12,17 @@ import {
   ChatBubbleLeftIcon,
   PhotoIcon,
   VideoCameraIcon,
-  ArrowLeftIcon
+  ArrowLeftIcon,
+  CheckCircleIcon,
+  BuildingOfficeIcon,
+  IdentificationIcon,
+  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 
 function IssueDetail() {
   const { id } = useParams();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const { addToast } = useToast();
   const navigate = useNavigate();
 
@@ -95,7 +101,13 @@ function IssueDetail() {
         },
       });
 
-      addToast('Response submitted successfully', 'success');
+      // Show appropriate success message
+      if (responseForm.status) {
+        addToast(t('statusUpdated'), 'success');
+      } else {
+        addToast('Response submitted successfully', 'success');
+      }
+      
       setResponseForm({ message: '', status: '', attachments: [] });
       
       const fetchUpdatedData = async () => {
@@ -212,6 +224,87 @@ function IssueDetail() {
     }
   };
 
+  const formatLevelName = (level) => {
+    const levelNames = {
+      'grama_niladhari': 'Grama Niladhari',
+      'divisional_secretary': 'Divisional Secretary',
+      'district_secretary': 'District Secretary',
+      'provincial_ministry': 'Provincial Ministry',
+      'national_ministry': 'National Ministry',
+      'prime_minister': 'Prime Minister'
+    };
+    return levelNames[level] || level.replace('_', ' ').toUpperCase();
+  };
+
+  const getLevelBadgeColor = (level) => {
+    switch (level) {
+      case 'grama_niladhari':
+        return 'bg-green-100 text-green-800';
+      case 'divisional_secretary':
+        return 'bg-blue-100 text-blue-800';
+      case 'district_secretary':
+        return 'bg-purple-100 text-purple-800';
+      case 'provincial_ministry':
+        return 'bg-orange-100 text-orange-800';
+      case 'national_ministry':
+        return 'bg-red-100 text-red-800';
+      case 'prime_minister':
+        return 'bg-gray-100 text-gray-800';
+      default:
+        return 'bg-slate-100 text-slate-800';
+    }
+  };
+
+  // Check if user can manage status
+  const canManageStatus = () => {
+    if (!user) return false;
+    
+    // Government officials can manage status
+    const governmentUserTypes = [
+      'grama_niladhari',
+      'divisional_secretary', 
+      'district_secretary',
+      'provincial_ministry',
+      'national_ministry',
+      'prime_minister',
+      'admin'
+    ];
+    
+    return governmentUserTypes.includes(user.user_type) || user.role === 'staff';
+  };
+
+  // Get available status options based on current status and user level
+  const getAvailableStatusOptions = () => {
+    if (!issue || !canManageStatus()) return [];
+    
+    const currentStatus = issue.status;
+    const userType = user.user_type;
+    
+    let options = [];
+    
+    // Basic status transitions available to all government officials
+    if (currentStatus === 'pending') {
+      options.push(
+        { value: 'in_progress', label: t('inProgress') },
+        { value: 'resolved', label: t('resolved') }
+      );
+    } else if (currentStatus === 'in_progress') {
+      options.push(
+        { value: 'resolved', label: t('resolved') },
+        { value: 'pending', label: t('pending') }
+      );
+    }
+    
+    // Higher level officials can close issues
+    if (['admin', 'district_secretary', 'provincial_ministry', 'national_ministry', 'prime_minister'].includes(userType)) {
+      if (currentStatus !== 'closed') {
+        options.push({ value: 'closed', label: t('closed') });
+      }
+    }
+    
+    return options;
+  };
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -302,6 +395,31 @@ function IssueDetail() {
                       {issue.priority?.toUpperCase()} PRIORITY
                     </span>
                   </div>
+                  
+                  {/* Quick Status Update for Government Officials */}
+                  {canManageStatus() && getAvailableStatusOptions().length > 0 && (
+                    <div className="flex items-center space-x-2">
+                      <select
+                        value=""
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            setResponseForm(prev => ({ ...prev, status: e.target.value }));
+                            // Auto-scroll to response form
+                            document.getElementById('response-form')?.scrollIntoView({ behavior: 'smooth' });
+                          }
+                        }}
+                        className="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-white/20"
+                      >
+                        <option value="" className="text-slate-900">{t('updateStatus')}</option>
+                        {getAvailableStatusOptions().map(option => (
+                          <option key={option.value} value={option.value} className="text-slate-900">
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      <CheckCircleIcon className="h-5 w-5 text-white/70" />
+                    </div>
+                  )}
                 </div>
                 <h1 className="text-3xl font-bold mb-3 leading-tight">{issue.title}</h1>
                 <p className="text-slate-200 text-lg">
@@ -587,45 +705,14 @@ function IssueDetail() {
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Right Sidebar - Issue Meta & Actions */}
-          <div className="lg:col-span-1 space-y-6">
-            
-            {/* Issue Meta Card */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-              <h3 className="text-lg font-bold text-slate-900 mb-4">Issue Details</h3>
-              <div className="space-y-4">
-                {issue.location && (
-                  <div className="flex items-start space-x-3">
-                    <MapPinIcon className="h-5 w-5 text-slate-400 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium text-slate-600">Location</p>
-                      <p className="text-sm text-slate-900">{issue.location}</p>
-                    </div>
-                  </div>
-                )}
-                <div className="flex items-start space-x-3">
-                  <UserIcon className="h-5 w-5 text-slate-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-medium text-slate-600">Category</p>
-                    <p className="text-sm text-slate-900">{issue.category || 'General'}</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <ClockIcon className="h-5 w-5 text-slate-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-medium text-slate-600">Created</p>
-                    <p className="text-sm text-slate-900">{formatDate(issue.created_at)}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             {/* Response Form */}
             {canRespond && (
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                <h3 className="text-lg font-bold text-slate-900 mb-4">Add Response</h3>
+              <div id="response-form" className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mt-8">
+                <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                  <ChatBubbleLeftIcon className="h-5 w-5 text-blue-600 mr-2" />
+                  Add Response
+                </h3>
                 <form onSubmit={handleResponseSubmit} className="space-y-4">
                   <div>
                     <textarea
@@ -637,17 +724,27 @@ function IssueDetail() {
                     />
                   </div>
 
-                  {user?.role === 'staff' && (
+                  {canManageStatus() && (
                     <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        {t('changeStatus')}
+                        {responseForm.status && (
+                          <span className="ml-2 text-xs text-green-600 font-medium">
+                            ({t('statusSelected')}: {getAvailableStatusOptions().find(opt => opt.value === responseForm.status)?.label})
+                          </span>
+                        )}
+                      </label>
                       <select
                         value={responseForm.status}
                         onChange={(e) => setResponseForm(prev => ({ ...prev, status: e.target.value }))}
                         className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       >
-                        <option value="">No status change</option>
-                        <option value="in_progress">In Progress</option>
-                        <option value="resolved">Resolved</option>
-                        <option value="closed">Closed</option>
+                        <option value="">{t('noStatusChange')}</option>
+                        {getAvailableStatusOptions().map(option => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   )}
@@ -681,8 +778,9 @@ function IssueDetail() {
 
                   <button
                     type="submit"
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-200"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center"
                   >
+                    <ChatBubbleLeftIcon className="h-5 w-5 mr-2" />
                     Submit Response
                   </button>
                 </form>
@@ -690,49 +788,288 @@ function IssueDetail() {
             )}
 
             {/* Comments Section */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-              <h3 className="text-lg font-bold text-slate-900 mb-4">Comments</h3>
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mt-8">
+              <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                <ChatBubbleLeftIcon className="h-5 w-5 text-green-600 mr-2" />
+                Public Comments
+              </h3>
               
               {user && (
-                <form onSubmit={handleCommentSubmit} className="mb-4 space-y-3">
+                <form onSubmit={handleCommentSubmit} className="mb-6 space-y-3">
                   <textarea
                     value={commentForm.content}
                     onChange={(e) => setCommentForm(prev => ({ ...prev, content: e.target.value }))}
-                    placeholder="Add a comment..."
-                    rows={2}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-sm"
+                    placeholder="Add a public comment..."
+                    rows={3}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"
                   />
                   <button
                     type="submit"
-                    className="w-full bg-slate-600 hover:bg-slate-700 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-200 text-sm"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center"
                   >
+                    <ChatBubbleLeftIcon className="h-5 w-5 mr-2" />
                     Add Comment
                   </button>
                 </form>
               )}
 
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {comments.length === 0 ? (
-                  <p className="text-slate-500 text-sm text-center py-4">No comments yet</p>
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
+                      <ChatBubbleLeftIcon className="h-8 w-8 text-slate-400" />
+                    </div>
+                    <p className="text-slate-500">No comments yet</p>
+                    <p className="text-slate-400 text-sm mt-1">Be the first to comment on this issue</p>
+                  </div>
                 ) : (
                   comments.map((comment) => (
-                    <div key={comment.id} className="flex space-x-3 p-3 bg-slate-50 rounded-lg">
-                      <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center flex-shrink-0">
-                        <UserIcon className="w-4 h-4 text-slate-500" />
+                    <div key={comment.id} className="flex space-x-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <UserIcon className="w-5 h-5 text-green-600" />
                       </div>
                       <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-1">
-                          <span className="font-medium text-slate-900 text-sm">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <span className="font-medium text-slate-900">
                             {comment.author_name}
                           </span>
                           <span className="text-xs text-slate-500">
                             {formatDate(comment.created_at)}
                           </span>
                         </div>
-                        <p className="text-slate-700 text-sm">{comment.content}</p>
+                        <p className="text-slate-700">{comment.content}</p>
                       </div>
                     </div>
                   ))
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Sidebar - Issue Meta & Actions */}
+          <div className="lg:col-span-1 space-y-6">
+            
+            {/* Issue Meta Card */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+              <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                <MapPinIcon className="h-5 w-5 text-blue-600 mr-2" />
+                {t('locationDetails')}
+              </h3>
+              <div className="space-y-4">
+                {/* Hierarchical Location Information */}
+                <div className="space-y-3">
+                  {issue.province_name && (
+                    <div className="flex items-start space-x-3">
+                      <BuildingOfficeIcon className="h-4 w-4 text-slate-400 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-medium text-slate-600">{t('province')}</p>
+                        <p className="text-sm text-slate-900">{issue.province_name}</p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {issue.district_name && (
+                    <div className="flex items-start space-x-3">
+                      <BuildingOfficeIcon className="h-4 w-4 text-slate-400 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-medium text-slate-600">{t('district')}</p>
+                        <p className="text-sm text-slate-900">{issue.district_name}</p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {issue.ds_division_name && (
+                    <div className="flex items-start space-x-3">
+                      <BuildingOfficeIcon className="h-4 w-4 text-slate-400 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-medium text-slate-600">{t('dsDivision')}</p>
+                        <p className="text-sm text-slate-900">{issue.ds_division_name}</p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {issue.gn_division_name && (
+                    <div className="flex items-start space-x-3">
+                      <BuildingOfficeIcon className="h-4 w-4 text-slate-400 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-medium text-slate-600">{t('gnDivision')}</p>
+                        <p className="text-sm text-slate-900">{issue.gn_division_name}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Specific Address */}
+                {(issue.address || issue.reporter_address) && (
+                  <div className="mt-3 p-3 bg-slate-50 rounded-lg">
+                    <div className="flex items-start space-x-3">
+                      <MapPinIcon className="h-4 w-4 text-slate-400 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-medium text-slate-600">{t('address')}</p>
+                        <p className="text-sm text-slate-900">{issue.address || issue.reporter_address}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Responsible Officers */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+              <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                <IdentificationIcon className="h-5 w-5 text-blue-600 mr-2" />
+                {t('responsibleOfficers')}
+              </h3>
+              <div className="space-y-4">
+                {/* Current Handler */}
+                {issue.current_handler_name && (
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-start space-x-3">
+                      <UserIcon className="h-4 w-4 text-blue-600 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-xs font-medium text-blue-900">{t('currentHandler')}</p>
+                        <p className="text-sm font-semibold text-blue-900">{issue.current_handler_name}</p>
+                        <div className="mt-1 flex items-center">
+                          <span className="text-xs text-blue-700">{t('handlerLevel')}: </span>
+                          <span className={`ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getLevelBadgeColor(issue.current_level)}`}>
+                            {formatLevelName(issue.current_level)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Hierarchy Progress */}
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-slate-600 mb-2">Administrative Hierarchy:</p>
+                  
+                  {/* GN Level */}
+                  {issue.gn_division_name && (
+                    <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                      <div className="flex items-center space-x-2">
+                        <div className={`w-2 h-2 rounded-full ${issue.current_level === 'grama_niladhari' ? 'bg-blue-500' : 'bg-slate-300'}`}></div>
+                        <div>
+                          <p className="text-xs font-medium text-slate-900">GN</p>
+                        </div>
+                      </div>
+                      {issue.current_level === 'grama_niladhari' && (
+                        <span className="text-xs bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">Current</span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* DS Level */}
+                  {issue.ds_division_name && (
+                    <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                      <div className="flex items-center space-x-2">
+                        <div className={`w-2 h-2 rounded-full ${issue.current_level === 'divisional_secretary' ? 'bg-blue-500' : 'bg-slate-300'}`}></div>
+                        <div>
+                          <p className="text-xs font-medium text-slate-900">DS</p>
+                        </div>
+                      </div>
+                      {issue.current_level === 'divisional_secretary' && (
+                        <span className="text-xs bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">Current</span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* District Level */}
+                  {issue.district_name && (
+                    <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                      <div className="flex items-center space-x-2">
+                        <div className={`w-2 h-2 rounded-full ${issue.current_level === 'district_secretary' ? 'bg-blue-500' : 'bg-slate-300'}`}></div>
+                        <div>
+                          <p className="text-xs font-medium text-slate-900">District</p>
+                        </div>
+                      </div>
+                      {issue.current_level === 'district_secretary' && (
+                        <span className="text-xs bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">Current</span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Provincial Level */}
+                  {issue.province_name && (
+                    <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                      <div className="flex items-center space-x-2">
+                        <div className={`w-2 h-2 rounded-full ${issue.current_level === 'provincial_ministry' ? 'bg-blue-500' : 'bg-slate-300'}`}></div>
+                        <div>
+                          <p className="text-xs font-medium text-slate-900">Provincial</p>
+                        </div>
+                      </div>
+                      {issue.current_level === 'provincial_ministry' && (
+                        <span className="text-xs bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">Current</span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* National Level */}
+                  <div className="flex items-center justify-between p-2 bg-slate-50 rounded">
+                    <div className="flex items-center space-x-2">
+                      <div className={`w-2 h-2 rounded-full ${['national_ministry', 'prime_minister'].includes(issue.current_level) ? 'bg-blue-500' : 'bg-slate-300'}`}></div>
+                      <div>
+                        <p className="text-xs font-medium text-slate-900">National</p>
+                      </div>
+                    </div>
+                    {['national_ministry', 'prime_minister'].includes(issue.current_level) && (
+                      <span className="text-xs bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">Current</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Escalation Information */}
+                {issue.escalation_count > 0 && (
+                  <div className="mt-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                    <div className="flex items-start space-x-2">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
+                      <div>
+                        <p className="text-xs font-medium text-orange-800">Escalated {issue.escalation_count} time(s)</p>
+                        <p className="text-xs text-orange-700 mt-1">
+                          Issue moved up administrative levels for resolution.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Issue Meta */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+              <h3 className="text-lg font-bold text-slate-900 mb-4">Issue Details</h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <UserIcon className="h-5 w-5 text-slate-400 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">Category</p>
+                    <p className="text-sm text-slate-900">{issue.category || 'General'}</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <ClockIcon className="h-5 w-5 text-slate-400 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">Priority</p>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(issue.priority)}`}>
+                      {issue.priority?.toUpperCase()}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <ClockIcon className="h-5 w-5 text-slate-400 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">Submitted</p>
+                    <p className="text-sm text-slate-900">{formatDate(issue.created_at)}</p>
+                  </div>
+                </div>
+                {issue.resolved_at && (
+                  <div className="flex items-start space-x-3">
+                    <CheckCircleIcon className="h-5 w-5 text-green-500 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-slate-600">Resolved</p>
+                      <p className="text-sm text-slate-900">{formatDate(issue.resolved_at)}</p>
+                    </div>
+                  </div>
                 )}
               </div>
             </div>

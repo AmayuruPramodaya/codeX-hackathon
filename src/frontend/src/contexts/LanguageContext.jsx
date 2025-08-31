@@ -46,6 +46,22 @@ const translations = {
     escalated: 'Escalated',
     closed: 'Closed',
     
+    // Status Management
+    updateStatus: 'Update Status',
+    changeStatus: 'Change Status',
+    statusUpdated: 'Status updated successfully',
+    statusUpdateFailed: 'Failed to update status',
+    noStatusChange: 'No status change',
+    selectNewStatus: 'Select new status',
+    statusChangeReason: 'Reason for status change',
+    statusSelected: 'Status selected',
+    
+    // Location and Officers
+    locationDetails: 'Location Details',
+    responsibleOfficers: 'Responsible Officers',
+    currentHandler: 'Current Handler',
+    handlerLevel: 'Handler Level',
+    
     // Priority
     low: 'Low',
     medium: 'Medium',
@@ -168,6 +184,38 @@ const translations = {
     hierarchicalSystem: 'Hierarchical System',
     hierarchicalSystemDesc: 'Issues are handled at the appropriate level and escalated when necessary to ensure resolution.',
     
+    // Features and descriptions for home page
+    quicklyReportIssues: 'Quickly report issues with detailed descriptions and supporting documents.',
+    trackProgress: 'Track Progress',
+    monitorIssueProgress: 'Monitor the progress of your issues through real-time updates and notifications.',
+    transparentProcessDescription: 'View public issues and their resolution progress through our transparent system.',
+    ensureAccountability: 'Ensure accountability at every level of government through technology-driven tracking.',
+    
+    // Process steps
+    reportIssue: 'Report Issue',
+    reportIssueDescription: 'Submit your issue with detailed information and supporting documents.',
+    automaticRouting: 'Automatic Routing',
+    automaticRoutingDescription: 'System automatically routes your issue to the appropriate government level.',
+    officialResponse: 'Official Response',
+    officialResponseDescription: 'Government officials review and respond to your issue promptly.',
+    resolution: 'Resolution',
+    resolutionDescription: 'Track the resolution progress and receive updates until completion.',
+    
+    // Statistics
+    issuesResolved: 'Issues Resolved',
+    satisfactionRate: 'Satisfaction Rate',
+    systemAvailability: 'System Availability',
+    governmentLevels: 'Government Levels',
+    
+    // Additional content
+    issueCategories: 'Issue Categories',
+    categoriesDescription: 'Report issues across various government service categories.',
+    stepByStepProcess: 'Follow our simple step-by-step process to report and track government issues.',
+    readyToGetStarted: 'Ready to Get Started?',
+    joinThousands: 'Join thousands of citizens working together to improve government services.',
+    getStartedToday: 'Get Started Today',
+    learnMore: 'Learn More',
+    
     // Call-to-Action
     readyToReport: 'Ready to report an issue?',
     startToday: 'Start the process today.',
@@ -218,6 +266,22 @@ const translations = {
     resolved: 'විසඳා ඇත',
     escalated: 'උඩු තට්ටුවට යවා ඇත',
     closed: 'වසා ඇත',
+    
+    // Status Management
+    updateStatus: 'තත්ත්වය යාවත්කාලීන කරන්න',
+    changeStatus: 'තත්ත්වය වෙනස් කරන්න',
+    statusUpdated: 'තත්ත්වය සාර්ථකව යාවත්කාලීන කරන ලදී',
+    statusUpdateFailed: 'තත්ත්වය යාවත්කාලීන කිරීම අසාර්ථක විය',
+    noStatusChange: 'තත්ත්වය වෙනස් කිරීමක් නැත',
+    selectNewStatus: 'නව තත්ත්වයක් තෝරන්න',
+    statusChangeReason: 'තත්ත්වය වෙනස් කිරීමට හේතුව',
+    statusSelected: 'තත්ත්වය තෝරා ගන්නා ලදී',
+    
+    // Location and Officers
+    locationDetails: 'ස්ථාන විස්තර',
+    responsibleOfficers: 'වගකිව යුතු නිලධාරීන්',
+    currentHandler: 'වර්තමාන හසුරුවන්නා',
+    handlerLevel: 'හසුරුවන්නාගේ මට්ටම',
     
     // Priority
     low: 'අඩු',
@@ -334,6 +398,38 @@ const translations = {
     primeMinister: 'අගමැති',
     primeMinisterDesc: 'උපරිම කිරීම් සඳහා අවසාන බලධාරිය',
     
+    // Features and descriptions for home page
+    quicklyReportIssues: 'විස්තරාත්මක විස්තර සහ ආධාරක ලේඛන සමඟ ගැටළු ඉක්මනින් වාර්තා කරන්න.',
+    trackProgress: 'ප්‍රගතිය ලුහුබඳින්න',
+    monitorIssueProgress: 'තථ්‍ය කාලීන යාවත්කාලීන කිරීම් සහ දැනුම්දීම් හරහා ඔබේ ගැටළුවල ප්‍රගතිය නිරීක්ෂණය කරන්න.',
+    transparentProcessDescription: 'අපගේ විනිවිදභාවයෙන් යුත් පද්ධතිය හරහා මහජන ගැටළු සහ ඒවායේ විසඳුම් ප්‍රගතිය බලන්න.',
+    ensureAccountability: 'තාක්ෂණය මගින් ගමන් කරන ලුහුබැඳීම හරහා රජයේ සෑම මට්ටමකම වගකීම සහතික කරන්න.',
+    
+    // Process steps
+    reportIssue: 'ගැටළුව වාර්තා කරන්න',
+    reportIssueDescription: 'විස්තරාත්මක තොරතුරු සහ ආධාරක ලේඛන සමඟ ඔබේ ගැටළුව ඉදිරිපත් කරන්න.',
+    automaticRouting: 'ස්වයංක්‍රීය මාර්ගගත කිරීම',
+    automaticRoutingDescription: 'පද්ධතිය ස්වයංක්‍රීයව ඔබේ ගැටළුව සුදුසු රජයේ මට්ටමට යොමු කරයි.',
+    officialResponse: 'නිල ප්‍රතිචාරය',
+    officialResponseDescription: 'රජයේ නිලධාරීන් ඔබේ ගැටළුව සමාලෝචනය කර ඉක්මනින් ප්‍රතිචාර දක්වයි.',
+    resolution: 'විසඳුම',
+    resolutionDescription: 'විසඳුම් ප්‍රගතිය ලුහුබඳින්න සහ සම්පූර්ණ වන තුරු යාවත්කාලීන කිරීම් ලබා ගන්න.',
+    
+    // Statistics
+    issuesResolved: 'විසඳූ ගැටළු',
+    satisfactionRate: 'තෘප්තිමත් වීමේ අනුපාතය',
+    systemAvailability: 'පද්ධති ලබා ගත හැකි බව',
+    governmentLevels: 'රජයේ මට්ටම්',
+    
+    // Additional content
+    issueCategories: 'ගැටළු කාණ්ඩ',
+    categoriesDescription: 'විවිධ රජයේ සේවා කාණ්ඩ හරහා ගැටළු වාර්තා කරන්න.',
+    stepByStepProcess: 'රජයේ ගැටළු වාර්තා කිරීම සහ ලුහුබැඳීම සඳහා අපගේ සරල පියවර අනුගමනය කරන්න.',
+    readyToGetStarted: 'ආරම්භ කිරීමට සූදානම්ද?',
+    joinThousands: 'රජයේ සේවා වැඩිදියුණු කිරීම සඳහා එකට වැඩ කරන දහස් ගණන් පුරවැසියන් සමඟ එකතු වන්න.',
+    getStartedToday: 'අද ආරම්භ කරන්න',
+    learnMore: 'වැඩිදුර ඉගෙන ගන්න',
+    
     // Additional home page content
     whyChooseOurSystem: 'අපගේ පද්ධතිය තෝරන්නේ ඇයි?',
     systemBenefits: 'අපගේ සම්පූර්ණ ගැටළු කළමනාකරණ පද්ධතිය ඔබගේ ගැටළු නිසි බලධාරීන් වෙත ළඟා වන ලෙස සහ ව්‍යුහගත උපරිම ක්‍රමයක් හරහා කාර්යක්ෂමව විසඳන ලෙස සහතික කරයි.',
@@ -391,6 +487,22 @@ const translations = {
     resolved: 'தீர்க்கப்பட்டது',
     escalated: 'உயர்த்தப்பட்டது',
     closed: 'மூடப்பட்டது',
+    
+    // Status Management
+    updateStatus: 'நிலையை புதுப்பிக்கவும்',
+    changeStatus: 'நிலையை மாற்றவும்',
+    statusUpdated: 'நிலை வெற்றிகரமாக புதுப்பிக்கப்பட்டது',
+    statusUpdateFailed: 'நிலையை புதுப்பிக்க தோல்வி',
+    noStatusChange: 'நிலை மாற்றம் இல்லை',
+    selectNewStatus: 'புதிய நிலையை தேர்ந்தெடுக்கவும்',
+    statusChangeReason: 'நிலை மாற்றத்திற்கான காரணம்',
+    statusSelected: 'நிலை தேர்ந்தெடுக்கப்பட்டது',
+    
+    // Location and Officers
+    locationDetails: 'இடம் விவரங்கள்',
+    responsibleOfficers: 'பொறுப்பு அதிகாரிகள்',
+    currentHandler: 'தற்போதைய கையாளுபவர்',
+    handlerLevel: 'கையாளுபவர் நிலை',
     
     // Priority
     low: 'குறைந்த',
@@ -506,6 +618,38 @@ const translations = {
     nationalMinistryDesc: 'தேசிய கொள்கை பிரச்சினைகளை நிர்வகிக்கவும்',
     primeMinister: 'பிரதமர்',
     primeMinisterDesc: 'அதிகரிப்புகளுக்கான இறுதி அதிகாரம்',
+    
+    // Features and descriptions for home page
+    quicklyReportIssues: 'விரிவான விளக்கங்கள் மற்றும் ஆதரவு ஆவணங்களுடன் பிரச்சினைகளை விரைவாக அறிக்கை செய்யுங்கள்.',
+    trackProgress: 'முன்னேற்றத்தை கண்காணிக்கவும்',
+    monitorIssueProgress: 'நிகழ்நேர புதுப்பிப்புகள் மற்றும் அறிவிப்புகள் மூலம் உங்கள் பிரச்சினைகளின் முன்னேற்றத்தை கண்காணிக்கவும்.',
+    transparentProcessDescription: 'எங்கள் வெளிப்படையான அமைப்பு மூலம் பொது பிரச்சினைகள் மற்றும் அவற்றின் தீர்வு முன்னேற்றத்தைப் பார்க்கவும்.',
+    ensureAccountability: 'தொழில்நுட்ப-உந்துதல் கண்காணிப்பு மூலம் அரசாங்கத்தின் ஒவ்வொரு மட்டத்திலும் பொறுப்புக்கூறலை உறுதிப்படுத்துங்கள்.',
+    
+    // Process steps
+    reportIssue: 'பிரச்சினையை அறிக்கை செய்யுங்கள்',
+    reportIssueDescription: 'விரிவான தகவல் மற்றும் ஆதரவு ஆவணங்களுடன் உங்கள் பிரச்சினையை சமர்ப்பிக்கவும்.',
+    automaticRouting: 'தானியங்கி வழிசெலுத்தல்',
+    automaticRoutingDescription: 'அமைப்பு தானாகவே உங்கள் பிரச்சினையை பொருத்தமான அரசாங்க மட்டத்திற்கு அனுப்புகிறது.',
+    officialResponse: 'அதிகாரப்பூர்வ பதில்',
+    officialResponseDescription: 'அரசு அதிகாரிகள் உங்கள் பிரச்சினையை மதிப்பாய்வு செய்து உடனடியாக பதிலளிக்கிறார்கள்.',
+    resolution: 'தீர்வு',
+    resolutionDescription: 'தீர்வு முன்னேற்றத்தை கண்காணித்து முடிக்கும் வரை புதுப்பிப்புகளைப் பெறுங்கள்.',
+    
+    // Statistics
+    issuesResolved: 'தீர்க்கப்பட்ட பிரச்சினைகள்',
+    satisfactionRate: 'திருப்தி விகிதம்',
+    systemAvailability: 'அமைப்பு கிடைக்கும் தன்மை',
+    governmentLevels: 'அரசாங்க மட்டங்கள்',
+    
+    // Additional content
+    issueCategories: 'பிரச்சினை வகைகள்',
+    categoriesDescription: 'பல்வேறு அரசு சேவை வகைகளில் பிரச்சினைகளை அறிக்கை செய்யுங்கள்.',
+    stepByStepProcess: 'அரசு பிரச்சினைகளை அறிக்கை செய்ய மற்றும் கண்காணிக்க எங்கள் எளிய படிப்படியான செயல்முறையைப் பின்பற்றவும்.',
+    readyToGetStarted: 'தொடங்க தயாரா?',
+    joinThousands: 'அரசு சேவைகளை மேம்படுத்த ஒன்றாக வேலை செய்யும் ஆயிரக்கணக்கான குடிமக்களுடன் சேருங்கள்.',
+    getStartedToday: 'இன்றே தொடங்குங்கள்',
+    learnMore: 'மேலும் அறிக',
     
     // Additional home page content
     whyChooseOurSystem: 'எங்கள் அமைப்பை ஏன் தேர்வு செய்ய வேண்டும்?',
