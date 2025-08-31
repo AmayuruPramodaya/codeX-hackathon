@@ -6,12 +6,15 @@ import ImageVideoViewer from '../components/ImageVideoViewer';
 import { 
   MagnifyingGlassIcon, 
   FunnelIcon,
-  ClockIcon,
   MapPinIcon,
   ChatBubbleLeftIcon,
   EyeIcon,
-  PhotoIcon,
-  VideoCameraIcon
+  ShareIcon,
+  EllipsisHorizontalIcon,
+  UserCircleIcon,
+  PlusIcon,
+  FaceSmileIcon,
+  PaperAirplaneIcon
 } from '@heroicons/react/24/outline';
 
 const PublicIssues = () => {
@@ -31,6 +34,10 @@ const PublicIssues = () => {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [viewerAttachments, setViewerAttachments] = useState([]);
   const [viewerIndex, setViewerIndex] = useState(0);
+  const [showComments, setShowComments] = useState({});
+  const [newComment, setNewComment] = useState({});
+  const [issueComments, setIssueComments] = useState({});
+  const [loadingComments, setLoadingComments] = useState({});
 
   const { addToast } = useToast();
 
@@ -131,31 +138,6 @@ const PublicIssues = () => {
     }
   };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case 'urgent':
-        return 'bg-red-500 shadow-lg shadow-red-200';
-      case 'high':
-        return 'bg-orange-500 shadow-lg shadow-orange-200';
-      case 'medium':
-        return 'bg-amber-500 shadow-lg shadow-amber-200';
-      case 'low':
-        return 'bg-emerald-500 shadow-lg shadow-emerald-200';
-      default:
-        return 'bg-slate-500 shadow-lg shadow-slate-200';
-    }
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
   const openImageViewer = (attachments, index = 0) => {
     setViewerAttachments(attachments);
     setViewerIndex(index);
@@ -168,79 +150,162 @@ const PublicIssues = () => {
     setViewerIndex(0);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600 mx-auto"></div>
-          <p className="mt-4 text-slate-600 text-lg">Loading issues...</p>
-        </div>
-      </div>
-    );
-  }
+  const toggleComments = async (issueId) => {
+    const isCurrentlyShowing = showComments[issueId];
+    
+    setShowComments(prev => ({
+      ...prev,
+      [issueId]: !prev[issueId]
+    }));
+
+    // If opening comments and we don't have them yet, fetch them
+    if (!isCurrentlyShowing && !issueComments[issueId]) {
+      await fetchComments(issueId);
+    }
+  };
+
+  const fetchComments = async (issueId) => {
+    try {
+      setLoadingComments(prev => ({ ...prev, [issueId]: true }));
+      // Use the correct comments endpoint for public comments
+      const response = await api.get(`/api/issues/${issueId}/comments/`);
+      
+      const comments = response.data.results || response.data || [];
+      
+      setIssueComments(prev => ({
+        ...prev,
+        [issueId]: comments
+      }));
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      addToast('Failed to load comments', 'error');
+      setIssueComments(prev => ({
+        ...prev,
+        [issueId]: []
+      }));
+    } finally {
+      setLoadingComments(prev => ({ ...prev, [issueId]: false }));
+    }
+  };
+
+  const handleCommentSubmit = async (issueId, e) => {
+    e.preventDefault();
+    const comment = newComment[issueId];
+    if (!comment?.trim()) return;
+    
+    try {
+      // Use the correct comment endpoint for public comments
+      const response = await api.post(`/api/issues/${issueId}/comment/`, {
+        content: comment.trim()  // Use 'content' field as expected by serializer
+      });
+      
+      // Add new comment to the list
+      setIssueComments(prev => ({
+        ...prev,
+        [issueId]: [response.data, ...(prev[issueId] || [])]
+      }));
+      
+      // Clear the input
+      setNewComment(prev => ({ ...prev, [issueId]: '' }));
+      addToast('Comment added successfully!', 'success');
+    } catch (error) {
+      console.error('Error submitting comment:', error);
+      addToast('Failed to add comment. Please try again.', 'error');
+    }
+  };
+
+  const handleShare = async (issue) => {
+    const shareData = {
+      title: issue.title,
+      text: issue.description,
+      url: `${window.location.origin}/issue/${issue.id}`
+    };
+
+    try {
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+        addToast('Issue shared successfully!', 'success');
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(`${issue.title}\n\n${issue.description}\n\nView more: ${shareData.url}`);
+        addToast('Issue link copied to clipboard!', 'success');
+      }
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        // Fallback: copy to clipboard
+        try {
+          await navigator.clipboard.writeText(`${issue.title}\n\n${issue.description}\n\nView more: ${shareData.url}`);
+          addToast('Issue link copied to clipboard!', 'success');
+        } catch {
+          addToast('Unable to share or copy link', 'error');
+        }
+      }
+    }
+  };
+
+  const getTimeAgo = (dateString) => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours}h`;
+    if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d`;
+    return date.toLocaleDateString();
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 mb-8 glass-effect">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-            <div>
-              <h1 className="text-3xl font-bold gradient-text-primary">Public Issues</h1>
-              <p className="mt-2 text-lg text-slate-600">
-                Track the progress of all submitted issues
-              </p>
-            </div>
-            <div className="mt-6 md:mt-0">
-              <Link
-                to="/submit-issue"
-                className="bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-slate-800 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                Submit New Issue
-              </Link>
-            </div>
+    <div className="min-h-screen bg-gray-100">
+      {/* Facebook-style Header */}
+      <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-gray-900">Public Issues Feed</h1>
+            <Link
+              to="/submit-issue"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2"
+            >
+              <PlusIcon className="h-5 w-5" />
+              <span>Create Issue</span>
+            </Link>
           </div>
         </div>
+      </div>
 
-        {/* Search and Filters */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8 glass-effect fade-in-up">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
-            {/* Search */}
-            <div className="lg:col-span-2">
-              <div className="relative">
-                <MagnifyingGlassIcon className="h-5 w-5 absolute left-4 top-3.5 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Search issues..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300"
-                />
-              </div>
+      <div className="max-w-4xl mx-auto px-4 py-6">
+        {/* Search and Filters - Compact Facebook Style */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+          <div className="flex flex-col space-y-4">
+            {/* Search Bar */}
+            <div className="relative">
+              <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-3 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search issues..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 w-full border border-gray-300 rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
+              />
             </div>
-
-            {/* Status Filter */}
-            <div>
+            
+            {/* Filters Row */}
+            <div className="flex flex-wrap gap-3">
               <select
                 value={filters.status}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Status</option>
                 <option value="open">Open</option>
                 <option value="in_progress">In Progress</option>
                 <option value="resolved">Resolved</option>
-                <option value="closed">Closed</option>
                 <option value="escalated">Escalated</option>
               </select>
-            </div>
 
-            {/* Priority Filter */}
-            <div>
               <select
                 value={filters.priority}
                 onChange={(e) => handleFilterChange('priority', e.target.value)}
-                className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Priorities</option>
                 <option value="urgent">Urgent</option>
@@ -248,14 +313,11 @@ const PublicIssues = () => {
                 <option value="medium">Medium</option>
                 <option value="low">Low</option>
               </select>
-            </div>
 
-            {/* Province Filter */}
-            <div>
               <select
                 value={filters.province}
                 onChange={(e) => handleFilterChange('province', e.target.value)}
-                className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Provinces</option>
                 {Array.isArray(divisions.provinces) && divisions.provinces.map(province => (
@@ -265,160 +327,214 @@ const PublicIssues = () => {
                 ))}
               </select>
             </div>
-
-            {/* District Filter */}
-            <div>
-              <select
-                value={filters.district}
-                onChange={(e) => handleFilterChange('district', e.target.value)}
-                disabled={!filters.province}
-                className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 disabled:bg-slate-100 transition-all duration-300"
-              >
-                <option value="">All Districts</option>
-                {Array.isArray(divisions.districts) && divisions.districts.map(district => (
-                  <option key={district.id} value={district.id}>
-                    {district.name}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
         </div>
 
-        {/* Issues List */}
-        <div className="space-y-6">
-          {issues.length === 0 ? (
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-16 text-center glass-effect">
-              <FunnelIcon className="h-16 w-16 text-slate-400 mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">No issues found</h3>
-              <p className="text-slate-600 text-lg">Try adjusting your search criteria or submit a new issue.</p>
+        {/* Issues Feed */}
+        <div className="space-y-4">
+          {loading ? (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading feed...</p>
+            </div>
+          ) : issues.length === 0 ? (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+              <FunnelIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No issues found</h3>
+              <p className="text-gray-600">Try adjusting your filters or create a new issue.</p>
             </div>
           ) : (
             issues.map((issue) => (
-              <div key={issue.id} className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg transition-all duration-300 glass-effect fade-in-up">
-                <div className="p-8">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-4 mb-4">
-                        <div className={`w-4 h-4 rounded-full ${getPriorityColor(issue.priority)}`}></div>
-                        <h3 className="text-xl font-bold text-slate-900">
-                          {issue.title}
-                        </h3>
-                        <span className={`inline-flex items-center px-3 py-1 rounded-xl text-sm font-semibold ${getStatusColor(issue.status)}`}>
-                          {issue.status.replace('_', ' ').toUpperCase()}
-                        </span>
+              <div key={issue.id} className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
+                {/* Post Header - Facebook Style */}
+                <div className="flex items-center justify-between p-4 border-b border-gray-100">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                      <UserCircleIcon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 text-sm">
+                        {issue.user?.first_name ? `${issue.user.first_name} ${issue.user.last_name}` : 'Anonymous User'}
+                      </h3>
+                      <div className="flex items-center space-x-2 text-xs text-gray-500">
+                        <span>{getTimeAgo(issue.created_at)}</span>
+                        <span>•</span>
+                        <MapPinIcon className="h-3 w-3" />
+                        <span>{issue.location || 'Location not specified'}</span>
                       </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(issue.status)}`}>
+                      {issue.status.replace('_', ' ').toUpperCase()}
+                    </span>
+                    <button className="p-1 hover:bg-gray-100 rounded-full">
+                      <EllipsisHorizontalIcon className="h-5 w-5 text-gray-500" />
+                    </button>
+                  </div>
+                </div>
 
-                      <p className="text-slate-700 mb-6 text-lg leading-relaxed line-clamp-2">
-                        {issue.description}
-                      </p>
+                {/* Post Content */}
+                <div className="p-4">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-3">{issue.title}</h2>
+                  <p className="text-gray-700 mb-4 leading-relaxed">{issue.description}</p>
 
-                      {/* Issue Attachments */}
-                      {issue.attachments && issue.attachments.length > 0 && (
-                        <div className="mb-6">
-                          <div className="flex items-center mb-4">
-                            <PhotoIcon className="h-5 w-5 text-slate-600 mr-2" />
-                            <span className="text-sm font-medium text-slate-700">
-                              Attachments ({issue.attachments.length})
-                            </span>
+                  {/* Attachments - Facebook Style Grid */}
+                  {issue.attachments && issue.attachments.length > 0 && (
+                    <div className="mb-4">
+                      {issue.attachments.length === 1 ? (
+                        <div className="rounded-lg overflow-hidden border border-gray-200">
+                          <img
+                            src={issue.attachments[0].file_url}
+                            alt="Issue attachment"
+                            className="w-full h-64 object-cover cursor-pointer"
+                            onClick={() => openImageViewer(issue.attachments, 0)}
+                          />
+                        </div>
+                      ) : issue.attachments.length === 2 ? (
+                        <div className="grid grid-cols-2 gap-1 rounded-lg overflow-hidden border border-gray-200">
+                          {issue.attachments.slice(0, 2).map((attachment, index) => (
+                            <img
+                              key={attachment.id}
+                              src={attachment.file_url}
+                              alt={`Issue attachment ${index + 1}`}
+                              className="w-full h-48 object-cover cursor-pointer"
+                              onClick={() => openImageViewer(issue.attachments, index)}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-2 gap-1 rounded-lg overflow-hidden border border-gray-200">
+                          <img
+                            src={issue.attachments[0].file_url}
+                            alt="Issue attachment 1"
+                            className="w-full h-48 object-cover cursor-pointer"
+                            onClick={() => openImageViewer(issue.attachments, 0)}
+                          />
+                          <div className="relative">
+                            <img
+                              src={issue.attachments[1].file_url}
+                              alt="Issue attachment 2"
+                              className="w-full h-48 object-cover cursor-pointer"
+                              onClick={() => openImageViewer(issue.attachments, 1)}
+                            />
+                            {issue.attachments.length > 2 && (
+                              <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center cursor-pointer"
+                                   onClick={() => openImageViewer(issue.attachments, 1)}>
+                                <span className="text-white font-semibold text-lg">
+                                  +{issue.attachments.length - 2}
+                                </span>
+                              </div>
+                            )}
                           </div>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            {issue.attachments.slice(0, 4).map((attachment, index) => (
-                              <div
-                                key={attachment.id}
-                                className="relative group cursor-pointer overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200"
-                                onClick={() => openImageViewer(issue.attachments, index)}
-                              >
-                                {attachment.file_type === 'image' ? (
-                                  <img
-                                    src={attachment.file_url}
-                                    alt={`Attachment ${index + 1}`}
-                                    className="w-full h-20 object-cover"
-                                  />
-                                ) : (
-                                  <div className="w-full h-20 bg-slate-100 flex items-center justify-center">
-                                    <VideoCameraIcon className="h-8 w-8 text-slate-500" />
-                                  </div>
-                                )}
-                                
-                                {/* Overlay for video files */}
-                                {attachment.file_type === 'video' && (
-                                  <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                                    <VideoCameraIcon className="h-6 w-6 text-white" />
-                                  </div>
-                                )}
+                        </div>
+                      )}
+                    </div>
+                  )}
 
-                                {/* Show count overlay if more than 4 attachments */}
-                                {index === 3 && issue.attachments.length > 4 && (
-                                  <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-                                    <span className="text-white font-semibold text-sm">
-                                      +{issue.attachments.length - 4}
-                                    </span>
+                  {/* Action Buttons - Simplified */}
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <button
+                      onClick={() => toggleComments(issue.id)}
+                      className="flex items-center space-x-2 px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      <ChatBubbleLeftIcon className="h-5 w-5" />
+                      <span className="font-medium">
+                        Comment ({issueComments[issue.id]?.length || 0})
+                      </span>
+                    </button>
+
+                    <button 
+                      onClick={() => handleShare(issue)}
+                      className="flex items-center space-x-2 px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      <ShareIcon className="h-5 w-5" />
+                      <span className="font-medium">Share</span>
+                    </button>
+
+                    <Link
+                      to={`/issue/${issue.id}`}
+                      className="flex items-center space-x-2 px-4 py-2 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors duration-200"
+                    >
+                      <EyeIcon className="h-5 w-5" />
+                      <span className="font-medium">View Details</span>
+                    </Link>
+                  </div>
+
+                  {/* Comments Section */}
+                  {showComments[issue.id] && (
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                      {/* Comments List - Scrollable */}
+                      <div className="max-h-96 overflow-y-auto mb-4">
+                        {loadingComments[issue.id] ? (
+                          <div className="flex justify-center py-4">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                          </div>
+                        ) : issueComments[issue.id] && issueComments[issue.id].length > 0 ? (
+                          <div className="space-y-3">
+                            {issueComments[issue.id].map((comment) => (
+                              <div key={comment.id} className="flex space-x-3">
+                                <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                  <UserCircleIcon className="w-5 h-5 text-white" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="bg-gray-100 rounded-lg px-3 py-2">
+                                    <p className="font-semibold text-sm text-gray-900">
+                                      {comment.author_name || 'Anonymous User'}
+                                      {comment.is_anonymous && (
+                                        <span className="ml-2 text-xs text-gray-500 font-normal">
+                                          (Anonymous)
+                                        </span>
+                                      )}
+                                    </p>
+                                    <p className="text-sm text-gray-700 mt-1 break-words">{comment.content}</p>
                                   </div>
-                                )}
+                                  <div className="flex items-center space-x-4 mt-1 text-xs text-gray-500">
+                                    <span>{getTimeAgo(comment.created_at)}</span>
+                                    <button className="hover:underline">Reply</button>
+                                  </div>
+                                </div>
                               </div>
                             ))}
                           </div>
-                        </div>
-                      )}
-
-                      <div className="flex flex-wrap items-center gap-6 text-sm text-slate-500">
-                        <div className="flex items-center">
-                          <ClockIcon className="h-5 w-5 mr-2" />
-                          {formatDate(issue.created_at)}
-                        </div>
-                        
-                        {issue.location && (
-                          <div className="flex items-center">
-                            <MapPinIcon className="h-5 w-5 mr-2" />
-                            {issue.location}
+                        ) : (
+                          <div className="text-center py-4 text-gray-500">
+                            <p className="text-sm">No comments yet. Be the first to comment!</p>
                           </div>
                         )}
-
-                        <div className="flex items-center">
-                          <ChatBubbleLeftIcon className="h-5 w-5 mr-2" />
-                          {issue.responses_count || 0} responses
-                        </div>
-
-                        <div className="flex items-center">
-                          <EyeIcon className="h-5 w-5 mr-2" />
-                          {issue.views_count || 0} views
-                        </div>
                       </div>
 
-                      {issue.current_handler && (
-                        <div className="mt-4 text-sm">
-                          <span className="text-slate-500">Current handler: </span>
-                          <span className="font-semibold text-slate-900">
-                            {issue.current_handler}
-                          </span>
+                      {/* Comment Input */}
+                      <form onSubmit={(e) => handleCommentSubmit(issue.id, e)} className="flex space-x-3">
+                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <UserCircleIcon className="w-5 h-5 text-white" />
                         </div>
-                      )}
-                    </div>
-
-                    <div className="ml-8">
-                      <Link
-                        to={`/issue/${issue.id}`}
-                        className="inline-flex items-center px-6 py-3 border border-slate-300 rounded-xl text-sm font-semibold text-slate-700 bg-white hover:bg-slate-50 transition-all duration-300 shadow-sm hover:shadow-md"
-                      >
-                        View Details
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Progress Indicator */}
-                  {issue.progress_percentage !== undefined && (
-                    <div className="mt-6">
-                      <div className="flex justify-between text-sm text-slate-600 mb-2">
-                        <span className="font-medium">Progress</span>
-                        <span className="font-bold">{issue.progress_percentage}%</span>
-                      </div>
-                      <div className="w-full bg-slate-200 rounded-full h-3">
-                        <div 
-                          className="bg-gradient-to-r from-slate-600 to-slate-700 h-3 rounded-full transition-all duration-500" 
-                          style={{ width: `${issue.progress_percentage}%` }}
-                        ></div>
-                      </div>
+                        <div className="flex-1 flex space-x-2">
+                          <input
+                            type="text"
+                            placeholder="Write a comment..."
+                            value={newComment[issue.id] || ''}
+                            onChange={(e) => setNewComment(prev => ({ ...prev, [issue.id]: e.target.value }))}
+                            className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
+                            disabled={loadingComments[issue.id]}
+                          />
+                          <button
+                            type="button"
+                            className="p-2 text-gray-500 hover:text-gray-700 disabled:opacity-50"
+                            disabled={loadingComments[issue.id]}
+                          >
+                            <FaceSmileIcon className="h-5 w-5" />
+                          </button>
+                          <button
+                            type="submit"
+                            className="p-2 text-blue-600 hover:text-blue-700 disabled:opacity-50"
+                            disabled={loadingComments[issue.id] || !newComment[issue.id]?.trim()}
+                          >
+                            <PaperAirplaneIcon className="h-5 w-5" />
+                          </button>
+                        </div>
+                      </form>
                     </div>
                   )}
                 </div>

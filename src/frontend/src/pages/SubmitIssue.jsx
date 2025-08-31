@@ -164,7 +164,7 @@ const SubmitIssue = () => {
     const files = Array.from(e.target.files);
     const validFiles = files.filter(file => {
       const isValidType = file.type.startsWith('image/') || file.type.startsWith('video/');
-      const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
+      const isValidSize = file.size <= 30 * 1024 * 1024; // 10MB limit
       return isValidType && isValidSize;
     });
 
