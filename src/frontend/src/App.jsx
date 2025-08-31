@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
 import SubmitIssue from './pages/SubmitIssue';
 import MyIssues from './pages/MyIssues';
@@ -57,12 +58,7 @@ function App() {
                   } />
                   <Route path="/profile" element={
                     <ProtectedRoute>
-                      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                        <div className="text-center">
-                          <h1 className="text-2xl font-bold text-gray-900 mb-2">Profile Page</h1>
-                          <p className="text-gray-600">Coming Soon...</p>
-                        </div>
-                      </div>
+                      <Profile />
                     </ProtectedRoute>
                   } />
                 </Routes>

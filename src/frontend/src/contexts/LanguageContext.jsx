@@ -1,16 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 
-const LanguageContext = createContext();
-
-const useLanguage = () => {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
-};
-
-export { useLanguage };
+export const LanguageContext = createContext();
 
 const translations = {
   en: {
@@ -116,6 +106,19 @@ const translations = {
     usernameRequired: 'Username is required',
     passwordRequired: 'Password is required',
     loginFailed: 'Login failed. Please check your credentials.',
+    
+    // Profile
+    editProfile: 'Edit Profile',
+    personalInformation: 'Personal Information',
+    accountInformation: 'Account Information',
+    profilePicture: 'Profile Picture',
+    notSpecified: 'Not Specified',
+    memberSince: 'Member Since',
+    accountStatus: 'Account Status',
+    approved: 'Approved',
+    profileUpdated: 'Profile updated successfully',
+    profileUpdateFailed: 'Failed to update profile',
+    saving: 'Saving...',
     forgotPassword: 'Forgot your password?',
     dontHaveAccount: "Don't have an account?",
     
@@ -143,6 +146,8 @@ const translations = {
     hierarchyDescription: 'Issues are handled at the appropriate level and escalated when necessary to ensure resolution.',
     citizen: 'Citizen',
     citizenDesc: 'Submit and track issues',
+    admin: 'Admin',
+    adminDesc: 'System administration and oversight',
     gramaNiladhari: 'Grama Niladhari',
     gramaNiladhariDesc: 'Handle local community issues',
     divisionalSecretary: 'Divisional Secretary',
@@ -155,8 +160,6 @@ const translations = {
     nationalMinistryDesc: 'Manage national policy issues',
     primeMinister: 'Prime Minister',
     primeMinisterDesc: 'Ultimate authority for escalations',
-    admin: 'Admin',
-    adminDesc: 'System administration and oversight',
     
     // Additional home page content
     whyChooseOurSystem: 'Why Choose Our System?',
@@ -218,6 +221,19 @@ const translations = {
     
     // Priority
     low: 'අඩු',
+    
+    // Profile
+    editProfile: 'පැතිකඩ සංස්කරණය කරන්න',
+    personalInformation: 'පුද්ගලික තොරතුරු',
+    accountInformation: 'ගිණුම් තොරතුරු',
+    profilePicture: 'පැතිකඩ පින්තූරය',
+    notSpecified: 'සඳහන් කර නැත',
+    memberSince: 'සාමාජිකයා වූ දිනෙන්',
+    accountStatus: 'ගිණුම් තත්ත්වය',
+    approved: 'අනුමත',
+    profileUpdated: 'පැතිකඩ යාවත්කාලීන කරන ලදී',
+    profileUpdateFailed: 'පැතිකඩ යාවත්කාලීන කිරීම අසාර්ථක විය',
+    saving: 'සුරකිමින්...',
     medium: 'මධ්‍යම',
     high: 'ඉහළ',
     urgent: 'හදිසි',
@@ -303,6 +319,8 @@ const translations = {
     hierarchyDescription: 'ගැටළු සුදුසු මට්ටමේ හසුරුවනු ලබන අතර විසඳුම සහතික කිරීම සඳහා අවශ්‍ය විට උපරිම කරනු ලැබේ.',
     citizen: 'පුරවැසියා',
     citizenDesc: 'ගැටළු ඉදිරිපත් කර ලුහුබඳින්න',
+    admin: 'පරිපාලක',
+    adminDesc: 'පද්ධති පරිපාලනය සහ අධීක්ෂණය',
     gramaNiladhari: 'ග්‍රාම නිලධාරි',
     gramaNiladhariDesc: 'ප්‍රාදේශීය ප්‍රජා ගැටළු හසුරුවන්න',
     divisionalSecretary: 'ප්‍රාදේශීය ලේකම්',
@@ -315,8 +333,6 @@ const translations = {
     nationalMinistryDesc: 'ජාතික ප්‍රතිපත්ති ගැටළු කළමනාකරණය කරන්න',
     primeMinister: 'අගමැති',
     primeMinisterDesc: 'උපරිම කිරීම් සඳහා අවසාන බලධාරිය',
-    admin: 'පරිපාලක',
-    adminDesc: 'පද්ධති පරිපාලනය සහ අධීක්ෂණය',
     
     // Additional home page content
     whyChooseOurSystem: 'අපගේ පද්ධතිය තෝරන්නේ ඇයි?',
@@ -436,6 +452,19 @@ const translations = {
     usernameRequired: 'பயனர் பெயர் தேவை',
     passwordRequired: 'கடவுச்சொல் தேவை',
     loginFailed: 'உள்நுழைவு தோல்வியடைந்தது. உங்கள் சான்றுகளை சரிபார்க்கவும்.',
+    
+    // Profile
+    editProfile: 'சுயவிவரத்தை திருத்தவும்',
+    personalInformation: 'தனிப்பட்ட தகவல்',
+    accountInformation: 'கணக்கு தகவல்',
+    profilePicture: 'சுயவிவர படம்',
+    notSpecified: 'குறிப்பிடப்படவில்லை',
+    memberSince: 'உறுப்பினராக உள்ள காலம்',
+    accountStatus: 'கணக்கு நிலை',
+    approved: 'அங்கீகரிக்கப்பட்டது',
+    profileUpdated: 'சுயவிவரம் வெற்றிகரமாக புதுப்பிக்கப்பட்டது',
+    profileUpdateFailed: 'சுயவிவரம் புதுப்பிக்க தோல்வி',
+    saving: 'சேமிக்கிறது...',
     forgotPassword: 'உங்கள் கடவுச்சொல்லை மறந்துவிட்டீர்களா?',
     dontHaveAccount: 'கணக்கு இல்லையா?',
     
@@ -463,6 +492,8 @@ const translations = {
     hierarchyDescription: 'பிரச்சினைகள் பொருத்தமான மட்டத்தில் கையாளப்படுகின்றன மற்றும் தீர்வை உறுதி செய்ய தேவைப்படும் போது அதிகரிக்கப்படுகின்றன.',
     citizen: 'குடிமகன்',
     citizenDesc: 'பிரச்சினைகளை சமர்ப்பித்து கண்காணிக்கவும்',
+    admin: 'நிர்வாகி',
+    adminDesc: 'அமைப்பு நிர்வாகம் மற்றும் மேற்பார்வை',
     gramaNiladhari: 'கிராம அதிகாரி',
     gramaNiladhariDesc: 'உள்ளூர் சமூக பிரச்சினைகளை கையாளுங்கள்',
     divisionalSecretary: 'பிரிவு செயலாளர்',
@@ -475,8 +506,6 @@ const translations = {
     nationalMinistryDesc: 'தேசிய கொள்கை பிரச்சினைகளை நிர்வகிக்கவும்',
     primeMinister: 'பிரதமர்',
     primeMinisterDesc: 'அதிகரிப்புகளுக்கான இறுதி அதிகாரம்',
-    admin: 'நிர்வாகி',
-    adminDesc: 'அமைப்பு நிர்வாகம் மற்றும் மேற்பார்வை',
     
     // Additional home page content
     whyChooseOurSystem: 'எங்கள் அமைப்பை ஏன் தேர்வு செய்ய வேண்டும்?',
@@ -527,4 +556,12 @@ export const LanguageProvider = ({ children }) => {
       {children}
     </LanguageContext.Provider>
   );
+};
+
+export const useLanguage = () => {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
 };
