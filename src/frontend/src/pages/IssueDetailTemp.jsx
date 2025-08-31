@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage } from '../contexts';
 import { useToast } from '../contexts/ToastContext';
 import { api } from '../services/api';
 import ImageVideoViewer from '../components/ImageVideoViewer';

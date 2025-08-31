@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage } from '../contexts';
 import { useToast } from '../contexts/ToastContext';
 import { api } from '../services/api';
 import {

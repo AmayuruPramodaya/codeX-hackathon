@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage } from '../contexts';
 import {
   Bars3Icon,
   XMarkIcon,

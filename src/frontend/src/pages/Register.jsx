@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage } from '../contexts';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import api from '../services/api';
 

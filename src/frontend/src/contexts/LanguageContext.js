@@ -1,8 +1,9 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import { createContext } from 'react';
 
+// Create the context and translations in a separate file (non-component exports)
 export const LanguageContext = createContext();
 
-const translations = {
+export const translations = {
   en: {
     // Navigation
     home: 'Home',
@@ -665,47 +666,4 @@ const translations = {
     getStartedNow: 'இப்போது தொடங்குங்கள்',
     exploreIssues: 'பிரச்சினைகளை ஆராயுங்கள்',
   }
-};
-
-export const LanguageProvider = ({ children }) => {
-  const [currentLanguage, setCurrentLanguage] = useState(() => {
-    return localStorage.getItem('language') || 'en';
-  });
-
-  useEffect(() => {
-    localStorage.setItem('language', currentLanguage);
-  }, [currentLanguage]);
-
-  const changeLanguage = (lang) => {
-    setCurrentLanguage(lang);
-  };
-
-  const t = (key) => {
-    return translations[currentLanguage]?.[key] || translations.en[key] || key;
-  };
-
-  const value = {
-    currentLanguage,
-    changeLanguage,
-    t,
-    languages: [
-      { code: 'en', name: 'English', flag: '🇺🇸' },
-      { code: 'si', name: 'සිංහල', flag: '🇱🇰' },
-      { code: 'ta', name: 'தமிழ்', flag: '🇱🇰' }
-    ]
-  };
-
-  return (
-    <LanguageContext.Provider value={value}>
-      {children}
-    </LanguageContext.Provider>
-  );
-};
-
-export const useLanguage = () => {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
 };

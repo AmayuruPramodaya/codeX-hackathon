@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
-import { LanguageProvider } from './contexts/LanguageContext';
+import { LanguageProvider } from './contexts';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
