@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { api } from '../services/api';
 import {
@@ -14,7 +13,6 @@ import {
 
 const SubmitIssue = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const { addToast } = useToast();
 
   const [formData, setFormData] = useState({

@@ -1,277 +1,239 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { useToast } from '../contexts/ToastContext';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import api from '../services/api';
 
 const Register = () => {
-  const [formData, setFormData] = useState({
+  const { t } = useLanguage();
+  const navigate = useNavigate();
+  const [form, setForm] = useState({
     username: '',
     email: '',
-    password: '',
-    confirmPassword: '',
     first_name: '',
     last_name: '',
+    password: '',
+    confirmPassword: '',
+    user_type: 'citizen',
     phone: '',
     address: '',
-    nic: ''
+    national_id: ''
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const { register } = useAuth();
-  const { addToast } = useToast();
-  const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError('');
+    setSuccess('');
+  };
+
+  const validate = () => {
+    if (!form.username || !form.email || !form.password || !form.confirmPassword || !form.first_name || !form.last_name) {
+      return t('allFieldsRequired');
+    }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) {
+      return t('invalidEmail');
+    }
+    if (form.password.length < 6) {
+      return t('passwordMinLength');
+    }
+    if (form.password !== form.confirmPassword) {
+      return t('passwordsMustMatch');
+    }
+    return '';
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (formData.password !== formData.confirmPassword) {
-      addToast('Passwords do not match', 'error');
+    const validationError = validate();
+    if (validationError) {
+      setError(validationError);
       return;
     }
-
-    if (formData.password.length < 6) {
-      addToast('Password must be at least 6 characters long', 'error');
-      return;
-    }
-
     setLoading(true);
-
     try {
-      const registrationData = { ...formData };
-      delete registrationData.confirmPassword;
-      
-      await register(registrationData);
-      addToast('Registration successful! Please login.', 'success');
-      navigate('/login');
-    } catch (error) {
-      console.error('Registration error:', error);
-      addToast(error.message || 'Registration failed. Please try again.', 'error');
+      await api.post('/api/auth/register/', {
+        username: form.username,
+        email: form.email,
+        first_name: form.first_name,
+        last_name: form.last_name,
+        password: form.password,
+        password_confirm: form.confirmPassword,
+        user_type: form.user_type,
+        phone: form.phone,
+        address: form.address,
+        national_id: form.national_id
+      });
+      setSuccess(t('registrationSuccess'));
+      setTimeout(() => navigate('/login'), 1500);
+    } catch (err) {
+      setError(err.response?.data?.detail || t('registrationFailed'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link
-              to="/login"
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
-              sign in to your existing account
-            </Link>
-          </p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
-                  First Name
-                </label>
-                <input
-                  id="first_name"
-                  name="first_name"
-                  type="text"
-                  required
-                  value={formData.first_name}
-                  onChange={handleChange}
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="First name"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="last_name" className="block text-sm font-medium text-gray-700">
-                  Last Name
-                </label>
-                <input
-                  id="last_name"
-                  name="last_name"
-                  type="text"
-                  required
-                  value={formData.last_name}
-                  onChange={handleChange}
-                  className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Last name"
-                />
-              </div>
-            </div>
-
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 py-12">
+      <div className="max-w-2xl w-full bg-white/90 backdrop-blur-lg glass-effect rounded-2xl shadow-2xl p-8 sm:p-12 mx-4">
+        <h2 className="text-3xl font-extrabold text-slate-900 mb-6 text-center gradient-text-primary fade-in-up">
+          {t('register')}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-6 fade-in-up">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                Username
+              <label htmlFor="first_name" className="block text-sm font-medium text-slate-700">
+                {t('firstName')}
               </label>
               <input
-                id="username"
-                name="username"
                 type="text"
-                required
-                value={formData.username}
+                name="first_name"
+                id="first_name"
+                autoComplete="given-name"
+                value={form.first_name}
                 onChange={handleChange}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Choose a username"
+                className="mt-1 block w-full rounded-xl border border-slate-300 shadow-sm py-3 px-4 text-slate-900 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+                required
               />
             </div>
-
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email Address
+              <label htmlFor="last_name" className="block text-sm font-medium text-slate-700">
+                {t('lastName')}
               </label>
               <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Enter your email"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="nic" className="block text-sm font-medium text-gray-700">
-                NIC Number
-              </label>
-              <input
-                id="nic"
-                name="nic"
                 type="text"
-                required
-                value={formData.nic}
+                name="last_name"
+                id="last_name"
+                autoComplete="family-name"
+                value={form.last_name}
                 onChange={handleChange}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="NIC number"
+                className="mt-1 block w-full rounded-xl border border-slate-300 shadow-sm py-3 px-4 text-slate-900 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+                required
               />
             </div>
-
+          </div>
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-slate-700">
+              {t('username')}
+            </label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              autoComplete="username"
+              value={form.username}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-xl border border-slate-300 shadow-sm py-3 px-4 text-slate-900 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+              {t('email')}
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              autoComplete="email"
+              value={form.email}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-xl border border-slate-300 shadow-sm py-3 px-4 text-slate-900 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+              required
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                Phone Number
+              <label htmlFor="phone" className="block text-sm font-medium text-slate-700">
+                {t('phone')} ({t('optional')})
               </label>
               <input
-                id="phone"
-                name="phone"
                 type="tel"
-                required
-                value={formData.phone}
+                name="phone"
+                id="phone"
+                autoComplete="tel"
+                value={form.phone}
                 onChange={handleChange}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Phone number"
+                className="mt-1 block w-full rounded-xl border border-slate-300 shadow-sm py-3 px-4 text-slate-900 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
               />
             </div>
-
             <div>
-              <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                Address
+              <label htmlFor="national_id" className="block text-sm font-medium text-slate-700">
+                {t('nationalId')} ({t('optional')})
               </label>
-              <textarea
-                id="address"
-                name="address"
-                required
-                value={formData.address}
+              <input
+                type="text"
+                name="national_id"
+                id="national_id"
+                value={form.national_id}
                 onChange={handleChange}
-                rows={2}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Enter your address"
+                className="mt-1 block w-full rounded-xl border border-slate-300 shadow-sm py-3 px-4 text-slate-900 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
               />
             </div>
-
+          </div>
+          <div>
+            <label htmlFor="address" className="block text-sm font-medium text-slate-700">
+              {t('address')} ({t('optional')})
+            </label>
+            <textarea
+              name="address"
+              id="address"
+              rows="2"
+              value={form.address}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-xl border border-slate-300 shadow-sm py-3 px-4 text-slate-900 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+                {t('password')}
               </label>
-              <div className="mt-1 relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="appearance-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Enter your password"
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeSlashIcon className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <EyeIcon className="h-5 w-5 text-gray-400" />
-                  )}
-                </button>
-              </div>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                autoComplete="new-password"
+                value={form.password}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-xl border border-slate-300 shadow-sm py-3 px-4 text-slate-900 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+                required
+              />
             </div>
-
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirm Password
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700">
+                {t('confirmPassword')}
               </label>
-              <div className="mt-1 relative">
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  required
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="appearance-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Confirm your password"
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? (
-                    <EyeSlashIcon className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <EyeIcon className="h-5 w-5 text-gray-400" />
-                  )}
-                </button>
-              </div>
+              <input
+                type="password"
+                name="confirmPassword"
+                id="confirmPassword"
+                autoComplete="new-password"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-xl border border-slate-300 shadow-sm py-3 px-4 text-slate-900 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+                required
+              />
             </div>
-
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Creating account...' : 'Create account'}
-              </button>
-            </div>
-
-            <div className="text-center">
-              <Link
-                to="/submit-issue"
-                className="text-sm text-blue-600 hover:text-blue-500"
-              >
-                Submit an issue without account
-              </Link>
-            </div>
-          </form>
+          </div>
+          {error && <div className="text-red-600 text-sm font-medium text-center fade-in-up">{error}</div>}
+          {success && <div className="text-green-600 text-sm font-medium text-center fade-in-up">{success}</div>}
+          <button
+            type="submit"
+            className="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold text-lg shadow-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+            disabled={loading}
+          >
+            {loading ? t('loading') : t('register')}
+            <ArrowRightIcon className="ml-2 h-5 w-5" />
+          </button>
+        </form>
+        <div className="mt-6 text-center text-slate-600 text-sm">
+          {t('alreadyHaveAccount')}{' '}
+          <a href="/login" className="text-blue-700 font-semibold hover:underline">
+            {t('signIn')}
+          </a>
         </div>
       </div>
     </div>

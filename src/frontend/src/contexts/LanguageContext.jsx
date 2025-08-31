@@ -90,6 +90,35 @@ const translations = {
     loginSuccess: 'Login successful',
     logoutSuccess: 'Logged out successfully',
     
+    // Registration & Authentication
+    username: 'Username',
+    email: 'Email',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    phone: 'Phone Number',
+    nationalId: 'National ID',
+    optional: 'Optional',
+    password: 'Password',
+    confirmPassword: 'Confirm Password',
+    allFieldsRequired: 'All required fields must be filled',
+    invalidEmail: 'Please enter a valid email address',
+    passwordMinLength: 'Password must be at least 6 characters',
+    passwordsMustMatch: 'Passwords must match',
+    registrationSuccess: 'Registration successful! Redirecting to login...',
+    registrationFailed: 'Registration failed. Please try again.',
+    alreadyHaveAccount: 'Already have an account?',
+    
+    // Login specific
+    governmentSolutionSystem: 'Government Solution System',
+    signInToAccount: 'Sign in to your account',
+    enterUsername: 'Enter your username',
+    enterPassword: 'Enter your password',
+    usernameRequired: 'Username is required',
+    passwordRequired: 'Password is required',
+    loginFailed: 'Login failed. Please check your credentials.',
+    forgotPassword: 'Forgot your password?',
+    dontHaveAccount: "Don't have an account?",
+    
     // Home page
     heroTitle: 'Government Issue',
     heroTitleHighlight: 'Management System',
@@ -221,6 +250,35 @@ const translations = {
     loginSuccess: 'සාර්ථකව පිවිසුණි',
     logoutSuccess: 'සාර්ථකව පිටව ගියේය',
     
+    // Registration & Authentication
+    username: 'පරිශීලක නාමය',
+    email: 'විද්‍යුත් තැපෑල',
+    firstName: 'මුල් නම',
+    lastName: 'අවසන් නම',
+    phone: 'දුරකථන අංකය',
+    nationalId: 'ජාතික හැඳුනුම්පත',
+    optional: 'අතිරේක',
+    password: 'මුරපදය',
+    confirmPassword: 'මුරපදය තහවුරු කරන්න',
+    allFieldsRequired: 'සියලුම අවශ්‍ය ක්ෂේත්‍ර පුරණය කළ යුතුය',
+    invalidEmail: 'කරුණාකර වලංගු විද්‍යුත් තැපැල් ලිපිනයක් ඇතුළත් කරන්න',
+    passwordMinLength: 'මුරපදය අවම වශයෙන් අක්ෂර 6ක් විය යුතුය',
+    passwordsMustMatch: 'මුරපද ගැලපිය යුතුය',
+    registrationSuccess: 'ලියාපදිංචිය සාර්ථකයි! පිවිසීමට යොමු කරමින්...',
+    registrationFailed: 'ලියාපදිංචිය අසාර්ථක විය. කරුණාකර නැවත උත්සාහ කරන්න.',
+    alreadyHaveAccount: 'දැනටමත් ගිණුමක් තිබේද?',
+    
+    // Login specific
+    governmentSolutionSystem: 'රජයේ විසඳුම් පද්ධතිය',
+    signInToAccount: 'ඔබේ ගිණුමට පිවිසෙන්න',
+    enterUsername: 'ඔබේ පරිශීලක නාමය ඇතුළත් කරන්න',
+    enterPassword: 'ඔබේ මුරපදය ඇතුළත් කරන්න',
+    usernameRequired: 'පරිශීලක නාමය අවශ්‍ය වේ',
+    passwordRequired: 'මුරපදය අවශ්‍ය වේ',
+    loginFailed: 'පිවිසීම අසාර්ථක විය. කරුණාකර ඔබේ අක්තපත්‍ර පරීක්ෂා කරන්න.',
+    forgotPassword: 'ඔබේ මුරපදය අමතකද?',
+    dontHaveAccount: 'ගිණුමක් නොමැතිද?',
+    
     // Home page
     heroTitle: 'රජයේ ගැටළු',
     heroTitleHighlight: 'කළමනාකරණ පද්ධතිය',
@@ -351,6 +409,35 @@ const translations = {
     submitError: 'சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.',
     loginSuccess: 'வெற்றிகரமாக உள்நுழைந்தீர்கள்',
     logoutSuccess: 'வெற்றிகரமாக வெளியேறியுள்ளீர்கள்',
+    
+    // Registration & Authentication
+    username: 'பயனர் பெயர்',
+    email: 'மின்னஞ்சல்',
+    firstName: 'முதல் பெயர்',
+    lastName: 'கடைசி பெயர்',
+    phone: 'தொலைபேசி எண்',
+    nationalId: 'தேசிய அடையாள எண்',
+    optional: 'விருப்பமானது',
+    password: 'கடவுச்சொல்',
+    confirmPassword: 'கடவுச்சொல்லை உறுதிப்படுத்தவும்',
+    allFieldsRequired: 'அனைத்து தேவையான புலங்களும் நிரப்பப்பட வேண்டும்',
+    invalidEmail: 'செல்லுபடியாகும் மின்னஞ்சல் முகவரியை உள்ளிடவும்',
+    passwordMinLength: 'கடவுச்சொல் குறைந்தது 6 எழுத்துகளாக இருக்க வேண்டும்',
+    passwordsMustMatch: 'கடவுச்சொற்கள் பொருந்த வேண்டும்',
+    registrationSuccess: 'பதிவு வெற்றிகரமாக முடிந்தது! உள்நுழைவிற்கு திருப்பி விடுகிறது...',
+    registrationFailed: 'பதிவு தோல்வியடைந்தது. மீண்டும் முயற்சிக்கவும்.',
+    alreadyHaveAccount: 'ஏற்கனவே கணக்கு உள்ளதா?',
+    
+    // Login specific
+    governmentSolutionSystem: 'அரசு தீர்வு அமைப்பு',
+    signInToAccount: 'உங்கள் கணக்கில் உள்நுழையவும்',
+    enterUsername: 'உங்கள் பயனர் பெயரை உள்ளிடவும்',
+    enterPassword: 'உங்கள் கடவுச்சொல்லை உள்ளிடவும்',
+    usernameRequired: 'பயனர் பெயர் தேவை',
+    passwordRequired: 'கடவுச்சொல் தேவை',
+    loginFailed: 'உள்நுழைவு தோல்வியடைந்தது. உங்கள் சான்றுகளை சரிபார்க்கவும்.',
+    forgotPassword: 'உங்கள் கடவுச்சொல்லை மறந்துவிட்டீர்களா?',
+    dontHaveAccount: 'கணக்கு இல்லையா?',
     
     // Home page
     heroTitle: 'அரசு பிரச்சினை',
