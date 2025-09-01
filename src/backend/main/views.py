@@ -1,6 +1,6 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import generics, status, permissions, filters
+from rest_framework import generics, status, permissions, filters, serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
@@ -118,12 +118,29 @@ class UserLoginView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+from django.db import IntegrityError
+from rest_framework.response import Response
+from rest_framework import status
+
 class UserProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         return self.request.user
+
+    def perform_update(self, serializer):
+        """
+        Override perform_update to handle IntegrityError gracefully
+        """
+        try:
+            serializer.save()
+        except IntegrityError as e:
+            if 'national_id' in str(e):
+                raise serializers.ValidationError({
+                    'national_id': 'This National ID is already registered to another user.'
+                })
+            raise e
 
 
 # Administrative division views

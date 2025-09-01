@@ -24,6 +24,7 @@ from .views import (
     search_administrative_divisions,
     upload_issue_attachment,
 )
+from .auth_views import google_auth, setup_otp, verify_otp, resend_otp, setup_password, verify_password, update_username, test_existing_user_error, check_email_exists
 
 # TODO: App urls
 
@@ -32,6 +33,22 @@ urlpatterns = [
     path("auth/register/", UserRegistrationView.as_view(), name="user-register"),
     path("auth/login/", UserLoginView.as_view(), name="user-login"),
     path("auth/profile/", UserProfileView.as_view(), name="user-profile"),
+    
+    # Google OAuth + OTP Authentication
+    path("auth/google/", google_auth, name="google-auth"),
+    path("auth/setup-otp/", setup_otp, name="setup-otp"),
+    path("auth/verify-otp/", verify_otp, name="verify-otp"),
+    path("auth/resend-otp/", resend_otp, name="resend-otp"),
+    path("auth/setup-password/", setup_password, name="setup-password"),
+    path("auth/verify-password/", verify_password, name="verify-password"),
+    path("auth/update-username/", update_username, name="update-username"),
+    
+    # Email checking
+    path("auth/check-email/", check_email_exists, name="check-email"),
+    
+    # Test endpoint for debugging
+    path("auth/test-existing-user/", test_existing_user_error, name="test-existing-user"),
+    
     # Administrative divisions
     path("divisions/provinces/", ProvinceListView.as_view(), name="province-list"),
     path("divisions/districts/", DistrictListView.as_view(), name="district-list"),

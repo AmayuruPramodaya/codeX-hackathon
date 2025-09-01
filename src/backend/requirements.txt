@@ -16,3 +16,11 @@ whitenoise[brotli]
 Faker
 pillow
 uuid
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
+django-otp
+pyotp
+qrcode[pil]
+twilio

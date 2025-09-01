@@ -105,6 +105,43 @@ class UserProfileSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id", "username", "user_type", "is_approved", "created_at"]
 
+    def validate_national_id(self, value):
+        """
+        Validate that national_id is unique, but allow the current user to keep their existing one
+        """
+        if value:  # Only validate if national_id is provided
+            # Get the current user instance being updated
+            instance = getattr(self, 'instance', None)
+            
+            # Check if another user already has this national_id
+            existing_user = User.objects.filter(national_id=value).exclude(
+                id=instance.id if instance else None
+            ).first()
+            
+            if existing_user:
+                raise serializers.ValidationError(
+                    f"This National ID is already registered to another user."
+                )
+        
+        return value
+
+
+class UserSerializer(serializers.ModelSerializer):
+    """Simple user serializer for authentication responses"""
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "user_type",
+            "phone",
+            "is_approved",
+        ]
+        read_only_fields = ["id", "username", "user_type", "is_approved"]
+
 
 class ProvinceSerializer(serializers.ModelSerializer):
     name = serializers.CharField(

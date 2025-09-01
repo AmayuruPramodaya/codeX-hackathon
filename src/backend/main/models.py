@@ -2,6 +2,9 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from datetime import timedelta
 from django.db import models
+import pyotp
+import random
+import string
 
 # TODO: Create project models
 
@@ -87,6 +90,12 @@ class User(AbstractUser):
     is_approved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        # Convert empty string national_id to None to avoid unique constraint issues
+        if self.national_id == '':
+            self.national_id = None
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.username} ({self.user_type})"
@@ -363,3 +372,101 @@ class SystemSettings(models.Model):
 
     def __str__(self):
         return f"{self.key}: {self.value[:50]}"
+
+
+class GoogleAuthUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='google_auth')
+    google_id = models.CharField(max_length=100, unique=True)
+    google_email = models.EmailField()
+    is_verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.user.username} - Google Auth"
+
+
+class OTPVerification(models.Model):
+    OTP_TYPES = (
+        ('email', 'Email'),
+        ('sms', 'SMS'),
+        ('google_auth', 'Google Authenticator'),
+    )
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='otp_verifications')
+    otp_type = models.CharField(max_length=20, choices=OTP_TYPES)
+    otp_code = models.CharField(max_length=6)
+    secret_key = models.CharField(max_length=32, blank=True, null=True)  # For TOTP
+    is_verified = models.BooleanField(default=False)
+    is_used = models.BooleanField(default=False)
+    expires_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.otp_code:
+            if self.otp_type == 'google_auth':
+                # Generate TOTP secret
+                self.secret_key = pyotp.random_base32()
+                totp = pyotp.TOTP(self.secret_key)
+                self.otp_code = totp.now()
+            else:
+                # Generate 6-digit OTP for email/SMS
+                self.otp_code = ''.join(random.choices(string.digits, k=6))
+        
+        if not self.expires_at:
+            if self.otp_type == 'google_auth':
+                self.expires_at = timezone.now() + timedelta(minutes=5)  # TOTP expires in 5 minutes
+            else:
+                self.expires_at = timezone.now() + timedelta(minutes=10)  # Email/SMS OTP expires in 10 minutes
+        
+        super().save(*args, **kwargs)
+    
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+    
+    def verify_otp(self, provided_otp):
+        if self.is_expired() or self.is_used:
+            return False
+        
+        if self.otp_type == 'google_auth':
+            totp = pyotp.TOTP(self.secret_key)
+            is_valid = totp.verify(provided_otp)
+        else:
+            is_valid = self.otp_code == provided_otp
+        
+        if is_valid:
+            self.is_verified = True
+            self.is_used = True
+            self.save()
+        
+        return is_valid
+    
+    def get_qr_code_url(self):
+        """Generate QR code URL for Google Authenticator"""
+        if self.otp_type == 'google_auth' and self.secret_key:
+            totp_uri = pyotp.totp.TOTP(self.secret_key).provisioning_uri(
+                name=self.user.email,
+                issuer_name="GovSol"
+            )
+            return totp_uri
+        return None
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.otp_type} OTP"
+    
+    class Meta:
+        ordering = ['-created_at']
+
+
+class LoginAttempt(models.Model):
+    email = models.EmailField()
+    google_id = models.CharField(max_length=100, blank=True, null=True)
+    ip_address = models.GenericIPAddressField()
+    is_successful = models.BooleanField(default=False)
+    otp_verified = models.BooleanField(default=False)
+    attempt_time = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.email} - {self.attempt_time}"
+    
+    class Meta:
+        ordering = ['-attempt_time']
