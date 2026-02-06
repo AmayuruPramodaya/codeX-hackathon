@@ -124,7 +124,7 @@ const PublicIssues = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'open':
-        return 'bg-blue-50 text-blue-700 border border-blue-200';
+        return 'bg-blue-50 text-[#001F54] border border-blue-200';
       case 'in_progress':
         return 'bg-amber-50 text-amber-700 border border-amber-200';
       case 'resolved':
@@ -255,12 +255,12 @@ const PublicIssues = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-orange-50">
       {/* Facebook-style Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-[#001F54] shadow-lg border-b border-blue-900 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">Public Issues Feed</h1>
+            <h1 className="text-2xl font-bold text-white">Public Issues Feed</h1>
             <Link
               to="/submit-issue"
               className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2"
@@ -284,7 +284,7 @@ const PublicIssues = () => {
                 placeholder="Search issues..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 w-full border border-gray-300 rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
+                className="pl-10 w-full border border-gray-300 rounded-full px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-gray-50"
               />
             </div>
             
@@ -293,7 +293,7 @@ const PublicIssues = () => {
               <select
                 value={filters.status}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="">All Status</option>
                 <option value="open">Open</option>
@@ -305,7 +305,7 @@ const PublicIssues = () => {
               <select
                 value={filters.priority}
                 onChange={(e) => handleFilterChange('priority', e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="">All Priorities</option>
                 <option value="urgent">Urgent</option>
@@ -317,7 +317,7 @@ const PublicIssues = () => {
               <select
                 value={filters.province}
                 onChange={(e) => handleFilterChange('province', e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="">All Provinces</option>
                 {Array.isArray(divisions.provinces) && divisions.provinces.map(province => (
@@ -334,7 +334,7 @@ const PublicIssues = () => {
         <div className="space-y-4">
           {loading ? (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto"></div>
               <p className="mt-4 text-gray-600">Loading feed...</p>
             </div>
           ) : issues.length === 0 ? (
@@ -455,7 +455,7 @@ const PublicIssues = () => {
 
                     <Link
                       to={`/issue/${issue.id}`}
-                      className="flex items-center space-x-2 px-4 py-2 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors duration-200"
+                      className="flex items-center space-x-2 px-4 py-2 rounded-lg text-orange-500 hover:bg-orange-50 transition-colors duration-200"
                     >
                       <EyeIcon className="h-5 w-5" />
                       <span className="font-medium">View Details</span>
@@ -469,13 +469,13 @@ const PublicIssues = () => {
                       <div className="max-h-96 overflow-y-auto mb-4">
                         {loadingComments[issue.id] ? (
                           <div className="flex justify-center py-4">
-                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-500"></div>
                           </div>
                         ) : issueComments[issue.id] && issueComments[issue.id].length > 0 ? (
                           <div className="space-y-3">
                             {issueComments[issue.id].map((comment) => (
                               <div key={comment.id} className="flex space-x-3">
-                                <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <div className="w-8 h-8 bg-gradient-to-r from-orange-400 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
                                   <UserCircleIcon className="w-5 h-5 text-white" />
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -516,7 +516,7 @@ const PublicIssues = () => {
                             placeholder="Write a comment..."
                             value={newComment[issue.id] || ''}
                             onChange={(e) => setNewComment(prev => ({ ...prev, [issue.id]: e.target.value }))}
-                            className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
+                            className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-50"
                             disabled={loadingComments[issue.id]}
                           />
                           <button
@@ -528,7 +528,7 @@ const PublicIssues = () => {
                           </button>
                           <button
                             type="submit"
-                            className="p-2 text-blue-600 hover:text-blue-700 disabled:opacity-50"
+                            className="p-2 text-orange-500 hover:text-orange-600 disabled:opacity-50"
                             disabled={loadingComments[issue.id] || !newComment[issue.id]?.trim()}
                           >
                             <PaperAirplaneIcon className="h-5 w-5" />
