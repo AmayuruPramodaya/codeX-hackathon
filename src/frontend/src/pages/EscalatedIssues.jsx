@@ -49,7 +49,7 @@ const EscalatedIssues = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-[#001F54] text-white';
       case 'in_progress':
         return 'bg-yellow-100 text-yellow-800';
       case 'resolved':

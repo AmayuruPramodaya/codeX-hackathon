@@ -272,16 +272,16 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100">
-      <div className="max-w-md w-full bg-white/90 backdrop-blur-lg glass-effect rounded-2xl shadow-2xl p-8 sm:p-12 mx-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#001F54] via-blue-900 to-[#001F54]">
+      <div className="max-w-md w-full bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl p-8 sm:p-12 mx-4">
         {/* Logo/Header */}
         <div className="text-center mb-8 fade-in-up">
-          <div className="mx-auto h-16 w-16 bg-gradient-to-r from-slate-800 to-slate-900 rounded-full flex items-center justify-center mb-4 shadow-lg">
+          <div className="mx-auto h-16 w-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
             <UserIcon className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold gradient-text-primary">GovSol</h1>
-          <h2 className="text-lg font-medium text-slate-600 mt-1">{t('governmentSolutionSystem')}</h2>
-          <p className="text-sm text-slate-500 mt-2">{t('signInToAccount')}</p>
+          <h1 className="text-3xl font-bold text-[#001F54]">Civic<span className="text-orange-500">Resolve</span></h1>
+          <h2 className="text-lg font-medium text-gray-600 mt-1">{t('governmentSolutionSystem')}</h2>
+          <p className="text-sm text-gray-500 mt-2">{t('signInToAccount')}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 fade-in-up">
@@ -374,7 +374,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center px-6 py-3 border border-transparent rounded-xl shadow-lg text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+            className="w-full flex items-center justify-center px-6 py-3 border border-transparent rounded-xl shadow-lg text-lg font-semibold text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
           >
             {loading ? (
               <div className="flex items-center">

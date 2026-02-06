@@ -172,7 +172,7 @@ const Profile = () => {
                     <UserCircleIcon className="h-12 w-12 text-white" />
                   )}
                 </div>
-                <button className="absolute -bottom-1 -right-1 h-6 w-6 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors">
+                <button className="absolute -bottom-1 -right-1 h-6 w-6 bg-orange-500 rounded-full flex items-center justify-center text-white hover:bg-orange-600 transition-colors">
                   <CameraIcon className="h-3 w-3" />
                 </button>
               </div>
@@ -193,7 +193,7 @@ const Profile = () => {
               {!isEditing ? (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-lg"
+                  className="flex items-center px-4 py-2 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition-colors shadow-lg"
                 >
                   <PencilIcon className="h-5 w-5 mr-2" />
                   {t('editProfile')}

@@ -263,7 +263,7 @@ const PublicIssues = () => {
             <h1 className="text-2xl font-bold text-gray-900">Public Issues Feed</h1>
             <Link
               to="/submit-issue"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2"
             >
               <PlusIcon className="h-5 w-5" />
               <span>Create Issue</span>
@@ -349,7 +349,7 @@ const PublicIssues = () => {
                 {/* Post Header - Facebook Style */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-100">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
                       <UserCircleIcon className="w-6 h-6 text-white" />
                     </div>
                     <div>
@@ -507,7 +507,7 @@ const PublicIssues = () => {
 
                       {/* Comment Input */}
                       <form onSubmit={(e) => handleCommentSubmit(issue.id, e)} className="flex space-x-3">
-                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
                           <UserCircleIcon className="w-5 h-5 text-white" />
                         </div>
                         <div className="flex-1 flex space-x-2">

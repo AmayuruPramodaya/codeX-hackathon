@@ -344,7 +344,7 @@ function IssueDetail() {
           <p className="text-slate-600 mb-4">The issue you're looking for doesn't exist.</p>
           <button
             onClick={() => navigate('/public-issues')}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg"
           >
             Back to Issues
           </button>
@@ -451,7 +451,7 @@ function IssueDetail() {
                         <PhotoIcon className="h-6 w-6 mr-2 text-blue-600" />
                         Media Gallery
                       </h3>
-                      <span className="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                      <span className="bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
                         {issue.attachments.length} files
                       </span>
                     </div>
@@ -526,7 +526,7 @@ function IssueDetail() {
                                   e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%23f1f5f9"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%23475569">IMG</text></svg>';
                                 }}
                               />
-                              <div className="absolute top-1 right-1 bg-blue-600 text-white p-1 rounded opacity-90">
+                              <div className="absolute top-1 right-1 bg-[#001F54] text-white p-1 rounded opacity-90">
                                 <PhotoIcon className="h-2.5 w-2.5" />
                               </div>
                             </div>
@@ -566,7 +566,7 @@ function IssueDetail() {
                       <div className="mt-4 text-center">
                         <button
                           onClick={() => openViewer(issue.attachments.filter(a => a.attachment_type === 'image' || a.attachment_type === 'video'), 0)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200"
+                          className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200"
                         >
                           View All Media ({issue.attachments.filter(a => a.attachment_type === 'image' || a.attachment_type === 'video').length})
                         </button>
@@ -602,7 +602,7 @@ function IssueDetail() {
                       
                       <div className="flex items-start space-x-4">
                         <div className="flex-shrink-0">
-                          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                          <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center shadow-sm">
                             <UserIcon className="w-6 h-6 text-white" />
                           </div>
                         </div>
@@ -778,7 +778,7 @@ function IssueDetail() {
 
                   <button
                     type="submit"
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center"
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center"
                   >
                     <ChatBubbleLeftIcon className="h-5 w-5 mr-2" />
                     Submit Response

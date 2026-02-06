@@ -53,21 +53,20 @@ const Header = () => {
   ] : [];
 
   return (
-    <header className="bg-white shadow-lg border-b border-gray-200 backdrop-blur-sm z-50">
+    <header className="bg-[#001F54] shadow-lg backdrop-blur-sm z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-18">
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center group">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-3 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-                <span className="text-white font-bold text-xl">GS</span>
+              <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-3 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                <span className="text-white font-bold text-xl">CR</span>
               </div>
               <div className="ml-4">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  <span className="text-blue-900">Gov</span>
-                  <span className="text-yellow-500">Sol</span>
+                <h1 className="text-2xl font-bold text-white">
+                  Civic<span className="text-orange-500">Resolve</span>
                 </h1>
-                <p className="text-sm text-gray-500 font-medium">Government Solutions</p>
+                <p className="text-sm text-blue-200 font-medium">Government of Sri Lanka</p>
               </div>
             </Link>
           </div>
@@ -78,7 +77,7 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className="text-gray-700 hover:text-blue-900 px-4 py-2 text-sm font-semibold rounded-lg hover:bg-gray-50 transition-all duration-300"
+                className="text-white hover:text-orange-500 px-4 py-2 text-sm font-semibold rounded-lg hover:bg-blue-900/50 transition-all duration-300"
               >
                 {item.name}
               </Link>
@@ -91,9 +90,9 @@ const Header = () => {
             <div className="relative">
               <button
                 onClick={() => setLanguageMenuOpen(!languageMenuOpen)}
-                className="flex items-center space-x-2 text-sm text-gray-700 hover:text-blue-900 px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300 border border-gray-200"
+                className="flex items-center space-x-2 text-sm text-white hover:text-orange-500 px-4 py-2 rounded-lg hover:bg-blue-900/50 transition-all duration-300 border border-blue-700"
               >
-                <GlobeAltIcon className="h-4 w-4 text-blue-600" />
+                <GlobeAltIcon className="h-4 w-4 text-orange-500" />
                 <span>{languages.find(lang => lang.code === currentLanguage)?.flag}</span>
                 <span className="hidden sm:block font-medium">{languages.find(lang => lang.code === currentLanguage)?.name}</span>
                 <ChevronDownIcon className="h-3 w-3" />
@@ -129,10 +128,10 @@ const Header = () => {
                 <div className="relative">
                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center space-x-3 text-sm text-gray-700 hover:text-blue-900 px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300"
+                    className="flex items-center space-x-3 text-sm text-white hover:text-orange-500 px-3 py-2 rounded-lg hover:bg-blue-900/50 transition-all duration-300"
                   >
-                    <div className="w-9 h-9 bg-gradient-to-r from-blue-100 to-blue-200 rounded-full flex items-center justify-center border border-blue-300">
-                      <UserCircleIcon className="w-5 h-5 text-blue-600" />
+                    <div className="w-9 h-9 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center border border-orange-400">
+                      <UserCircleIcon className="w-5 h-5 text-white" />
                     </div>
                     <span className="font-semibold">{user.first_name || user.username}</span>
                     <ChevronDownIcon className="h-3 w-3" />
@@ -184,13 +183,13 @@ const Header = () => {
               <div className="flex items-center space-x-3">
                 <Link
                   to="/login"
-                  className="text-gray-700 hover:text-blue-900 px-4 py-2 text-sm font-semibold rounded-lg hover:bg-gray-50 transition-all duration-300"
+                  className="text-white hover:text-orange-500 px-4 py-2 text-sm font-semibold rounded-lg hover:bg-blue-900/50 transition-all duration-300"
                 >
                   {t('signIn')}
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 px-5 py-2 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
                   {t('register')}
                 </Link>
@@ -202,7 +201,7 @@ const Header = () => {
           <div className="md:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-gray-700 hover:text-blue-900 p-2 rounded-lg hover:bg-gray-50 transition-all duration-300"
+              className="text-white hover:text-orange-500 p-2 rounded-lg hover:bg-blue-900/50 transition-all duration-300"
             >
               {mobileMenuOpen ? (
                 <XMarkIcon className="h-6 w-6" />
@@ -215,11 +214,11 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 py-6 bg-gray-50/50 backdrop-blur-sm">
+          <div className="md:hidden border-t border-blue-700 py-6 bg-blue-900/50 backdrop-blur-sm">
             <div className="space-y-2">
               {/* Language Switcher Mobile */}
               <div className="px-4 py-3">
-                <p className="text-sm font-semibold text-gray-700 mb-3">{t('language')}</p>
+                <p className="text-sm font-semibold text-white mb-3">{t('language')}</p>
                 <div className="grid grid-cols-3 gap-2">
                   {languages.map((language) => (
                     <button
@@ -246,7 +245,7 @@ const Header = () => {
                   key={item.name}
                   to={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-3 text-base font-semibold text-gray-700 hover:text-blue-900 hover:bg-white rounded-lg mx-2 transition-all duration-300"
+                  className="block px-4 py-3 text-base font-semibold text-white hover:text-orange-500 hover:bg-blue-800 rounded-lg mx-2 transition-all duration-300"
                 >
                   {item.name}
                 </Link>
@@ -303,7 +302,7 @@ const Header = () => {
                   <Link
                     to="/register"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-base font-semibold bg-yellow-400 hover:bg-yellow-300 text-blue-900 rounded-lg mx-2 shadow-lg transition-all duration-300"
+                    className="block px-4 py-3 text-base font-semibold bg-orange-500 hover:bg-orange-600 text-white rounded-lg mx-2 shadow-lg transition-all duration-300"
                   >
                     {t('register')}
                   </Link>

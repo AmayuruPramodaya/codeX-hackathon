@@ -104,7 +104,7 @@ const MyIssues = () => {
             <div className="mt-4 md:mt-0">
               <Link
                 to="/submit-issue"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium"
+                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium"
               >
                 Submit New Issue
               </Link>
@@ -145,7 +145,7 @@ const MyIssues = () => {
               </p>
               <Link
                 to="/submit-issue"
-                className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
+                className="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium"
               >
                 Submit Your First Issue
               </Link>
@@ -237,7 +237,7 @@ const MyIssues = () => {
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
-                          className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                          className="bg-orange-500 h-2 rounded-full transition-all duration-300" 
                           style={{ width: `${issue.progress_percentage}%` }}
                         ></div>
                       </div>

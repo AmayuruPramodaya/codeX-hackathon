@@ -51,9 +51,9 @@ const Dashboard = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'open':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-[#001F54] text-white';
       case 'in_progress':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-orange-100 text-orange-800';
       case 'resolved':
         return 'bg-green-100 text-green-800';
       case 'closed':
@@ -89,8 +89,8 @@ const Dashboard = () => {
       title: 'Total Issues',
       value: stats.total_issues,
       icon: ClipboardDocumentListIcon,
-      color: 'bg-blue-500',
-      textColor: 'text-blue-600'
+      color: 'bg-[#001F54]',
+      textColor: 'text-[#001F54]'
     },
     {
       title: 'Pending Issues',
@@ -209,7 +209,7 @@ const Dashboard = () => {
               <div className="space-y-3">
                 <Link
                   to="/submit-issue"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-center block transition-colors"
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium text-center block transition-colors"
                 >
                   Submit New Issue
                 </Link>
@@ -236,7 +236,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-sm p-6 text-white">
+            <div className="bg-gradient-to-r from-[#001F54] to-blue-900 rounded-lg shadow-sm p-6 text-white">
               <div className="flex items-center mb-3">
                 <ChartBarIcon className="h-6 w-6 mr-2" />
                 <h3 className="text-lg font-semibold">Your Role</h3>

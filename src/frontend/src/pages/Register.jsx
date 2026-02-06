@@ -76,9 +76,9 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 py-12">
-      <div className="max-w-2xl w-full bg-white/90 backdrop-blur-lg glass-effect rounded-2xl shadow-2xl p-8 sm:p-12 mx-4">
-        <h2 className="text-3xl font-extrabold text-slate-900 mb-6 text-center gradient-text-primary fade-in-up">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#001F54] via-blue-900 to-[#001F54] py-12">
+      <div className="max-w-2xl w-full bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl p-8 sm:p-12 mx-4">
+        <h2 className="text-3xl font-extrabold text-[#001F54] mb-6 text-center fade-in-up">
           {t('register')}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6 fade-in-up">
@@ -222,16 +222,16 @@ const Register = () => {
           {success && <div className="text-green-600 text-sm font-medium text-center fade-in-up">{success}</div>}
           <button
             type="submit"
-            className="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold text-lg shadow-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+            className="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-lg shadow-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300"
             disabled={loading}
           >
             {loading ? t('loading') : t('register')}
             <ArrowRightIcon className="ml-2 h-5 w-5" />
           </button>
         </form>
-        <div className="mt-6 text-center text-slate-600 text-sm">
+        <div className="mt-6 text-center text-gray-600 text-sm">
           {t('alreadyHaveAccount')}{' '}
-          <a href="/login" className="text-blue-700 font-semibold hover:underline">
+          <a href="/login" className="text-orange-500 font-semibold hover:underline">
             {t('signIn')}
           </a>
         </div>
